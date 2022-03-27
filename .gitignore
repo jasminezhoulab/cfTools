@@ -8,6 +8,7 @@
 .rprofile
 *.Rproj
 .rapp.history
+*.swp
 
 # Compiled Object files
 *.slo
