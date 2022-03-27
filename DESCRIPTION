@@ -1,0 +1,32 @@
+Package: cfTools
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.99.0
+Authors@R: person(given = "Ran",
+    family = "Hu",
+    role = c("aut", "cre"),
+    email = "huran@ucla.edu",
+    comment = c(ORCID = "0000-0002-0563-8957"))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+    Use four spaces when indenting paragraphs within the Description.
+    Use four spaces when indenting paragraphs within the Description.
+    At least three complete sentences.
+License: CC BY-NC 4.0
+Encoding: UTF-8
+Suggests:
+    BiocStyle, 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+RoxygenNote: 7.1.2
+Imports: 
+    Rcpp,
+    utils
+StagedInstall: no
+SystemRequirements: GNU make, C++11
+biocViews: Software, Sequencing, DNAMethylation, DifferentialMethylation
+VignetteBuilder: knitr
+LinkingTo: 
+    Rcpp

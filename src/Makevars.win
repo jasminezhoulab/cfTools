@@ -1,0 +1,15 @@
+## This file uses GNU make syntax (ifeq) which is allowed on Windows without
+## the need to add "SystemRequirements: GNU make" to the DESCRIPTION file.
+## See "Writing portable packages" in the "Writing R Extensions" manual:
+##   https://cran.r-project.org/doc/manuals/r-release/R-exts.html
+
+include Makevars.common
+
+HTSLIB_MAKEFILE=Makefile.Rhtslib.win
+
+## Linker options. Make sure the Rhtslib::pkgconfig() function (defined in
+## R/zzz.R) produces the same PKG_LIBS value.
+PKG_LIBS+=-lgsl -lgslcblas -lm
+
+populate-usrlib-dir: htslib mk-usrlib-dir
+	cd "${HTSLIB_SOURCE_DIR}" && cp libhts.a "${USRLIB_DIR}"

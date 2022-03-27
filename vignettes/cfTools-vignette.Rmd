@@ -1,0 +1,139 @@
+---
+title: "Introduction to cfTools"
+author: 
+  - name: Ran Hu
+    affiliation:
+      - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
+      - Institute for Quantitative & Computational Biosciences, University of California at Los Angeles
+      - Bioinformatics Interdepartmental Graduate Program, University of California at Los Angeles
+    email: huran@ucla.edu
+  - name: Wenyuan Li
+    affiliation:
+      - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
+      - Institute for Quantitative & Computational Biosciences, University of California at Los Angeles
+package: cfTools
+output: 
+  BiocStyle::html_document:
+    toc_float: true
+  BiocStyle::pdf_document: default
+abstract: >
+  cfTools is an R package...
+vignette: >
+  %\VignetteIndexEntry{cfTools-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+Given the cfMethyl-Seq data of a patient’s cell-free DNA (cfDNA) sample, for each cancer marker (tissue marker), we deconvolve the tumor-derived (tissue-specific) reads from all reads falling in the marker region. The read-based deconvolution exploits the pervasiveness of DNA methylation for signal enhancement. Specifically, we improved upon our previous probabilistic read deconvolution algorithm, i.e., CancerDetector [1], by (1) adding an “unknown” class to represent reads that cannot be classified to any known class (tumor type or tissue type), and (2) expanding the 2-class likelihood model to a k-class (k>=2)  model, for classifying reads into k different classes, and (3) For a given set of markers, we construct a profile vector where the length of the vector is the number of markers and the value in each entry is the normalized counts of tumor-derived (tissue-derived) reads. 
+
+Note that as described in the manuscript, this code can deconvolute the different sources of cfDNA reads in two contexts: (1) separating reads into tumor-derived reads and background reads; and (2) separating the reads from different tissues. 
+
+# Installation
+
+`r Biocpkg("cfTools")` is an `R` package available via the [Bioconductor](http://bioconductor.org) repository for packages. You can install the release version by using the following commands in your `R` session:
+
+```{r "install", eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+BiocManager::install("cfTools")
+```
+
+Alternatively, you can install the development version from [GitHub](https://github.com/) :
+
+```{r 'install_dev', eval = FALSE}
+BiocManager::install("jasminezhoulab/cfTools")
+```
+
+# cfDNA sequencing read deconvolution
+
+Example input files are included within the package:
+```{r demo}
+library(cfTools)
+demo.dir <- system.file("extdata", package="cfTools")
+```
+
+## Input 1: the cfDNA methylation sequencing reads file
+
+Each line is a read. All columns are delimited by TAB. There is one header line.
+We used three column to represent each read's information as below:
+
+- Column 1: marker_index, an integer number that is a marker index.
+- Column 2: number of methylated CpG of the read that is mapped to this marker's genomic region.
+- Column 3: number of unmethylated CpG of the read that is mapped to this marker's genomic region.
+
+For example:
+```{r}
+readsBinningFile <- file.path(demo.dir, "example.reads.txt")
+readsBinning <- read.table(readsBinningFile, header=TRUE)
+head(readsBinning)
+```
+
+## Input 2: the markers file
+
+Each line is a marker including its genomic region and methylation pattern (two shape parameters of the beta distribution, which are delimited by `:`). All columns are delimited by TAB. There is one header line.
+
+- Column 1: marker_index
+- Column 2+: paired values (shape parameters of the beta distribution) for this marker (each column is a class). Each pair contains two values, delimited by `:`. If you cannot estimate shape parameters of the beta distribution, you may also use a single value, which is the average methylation level of this marker across all samples in the same tissue type.
+
+For example:
+```{r}
+tissueMarkersFile <- file.path(demo.dir, "example.markers.txt")
+tissueMarkers <- read.table(tissueMarkersFile, header=TRUE)
+head(tissueMarkers)
+```
+
+## Other inputs: 
+
+- **Output type**: options are `tissueFraction` (default), `tissueFraction+readCountRaw`, `tissueFraction+readCountPerMillion`, `tissueFraction+readCountPerBillion`
+- **Output file name**: the output will be written to this file.
+- **Number of tissue types**: a positive integer number *k*. Reads will be classified into *k* different tissue types.
+- **Read-based tissue deconvolution EM algorithm type**: options are `em.global.unknown` (default), `em.global.known`, `em.local.unknown`, `em.local.known`.
+- **Likelihood ratio threshold**: a positive float number. We suggest this number is 2 (default). All reads with likelihood ratio < cutoff (default: -1.0, meanin no reads filtering is used) will not be used. Likelihood ratio is the max(all tissues' likelihoods)/min(all tissues' likelihoods).
+- **EM algorithm maximum iteration number**: a positive integer number. Default is 100.
+
+
+For example:
+```{r}
+outputType <- "tissueFraction+readCountPerBillion"
+outputFile <- file.path(demo.dir, "example.profile")
+numTissues <- 7
+emAlgorithmType <- "em.global.unknown"
+likelihoodRatioThreshold <- 2.0
+emMaxIterations <- 100
+```
+
+## Output: the normalized tissue-specific read counts in each marker
+
+The first three lines are header lines, indicating the column names and the global fraction of tissue types and other information. Starting from the 4-th line, each line corresponds to a marker, consisting of the tissue-specific read counts of this marker.
+
+- Column 1: marker index
+- Column 2+: read count of each tissue type in the marker, and the read count of the unknown class is listed in the last column of each line
+
+```{r, message=TRUE}
+cfSort(readsBinningFile, tissueMarkersFile, outputType, outputFile, 
+       numTissues, emAlgorithmType, likelihoodRatioThreshold, emMaxIterations)
+
+output <- read.table(outputFile, header=TRUE)
+head(output)
+```
+
+
+# References
+[1] Li W, Li Q, Kang S, Same M, Zhou Y, Sun C, Liu CC, Matsuoka L, Sher L, Wong WH, Alber F, Zhou XJ. CancerDetector: ultrasensitive and non-invasive cancer detection at the resolution of individual reads using cell-free DNA methylation sequencing data. Nucleic Acids Res. 2018 Sep 6;46(15):e89. doi: 10.1093/nar/gky423. PMID: 29897492; PMCID: PMC6125664.
+
+# Session info {.unnumbered}
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
+
+
