@@ -44,7 +44,7 @@ demo.dir <- system.file("extdata", package="cfTools")
 readsBinningFile <- file.path(demo.dir, "example.reads.txt")
 tissueMarkersFile <- file.path(demo.dir, "example.markers.txt")
 outputType <- "tissueFraction+readCountPerBillion"
-outputFile <- "/Users/huran/Desktop/cfTools_development/demo/example.profile"
+outputFile <- file.path(demo.dir, "example.profile")
 numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
 likelihoodRatioThreshold <- 2

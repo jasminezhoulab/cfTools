@@ -25,8 +25,10 @@ Imports:
     Rcpp,
     utils
 StagedInstall: no
-SystemRequirements: GNU make, C++11
+SystemRequirements: GNU make, GNU Scientific Library (GSL)
 biocViews: Software, Sequencing, DNAMethylation, DifferentialMethylation
 VignetteBuilder: knitr
 LinkingTo: 
-    Rcpp
+    Rcpp,
+    BH,
+    RcppGSL

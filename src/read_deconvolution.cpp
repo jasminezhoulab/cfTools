@@ -1,3 +1,4 @@
+// [[Rcpp::depends(BH)]]
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -130,7 +131,8 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	Bins2Values marker2beta;
 	vector<string> tissue_names;
 	if (str_ends_with(tissue_markers_file,fileext_gzip)) {
-		read_tissue_markers_gz_file(tissue_markers_file, 2, num_tissues, marker2beta, tissue_names);
+		// read_tissue_markers_gz_file(tissue_markers_file, 2, num_tissues, marker2beta, tissue_names);
+		Rcpp:Rcout << "Input has to be a txt file" << endl;
 	} else {
 		read_tissue_markers_txt_file(tissue_markers_file, 2, num_tissues, marker2beta, tissue_names);
 	}

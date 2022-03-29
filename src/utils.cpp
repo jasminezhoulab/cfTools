@@ -1,3 +1,5 @@
+// [[Rcpp::depends(BH)]]
+// [[Rcpp::depends(RcppGSL)]]
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -11,7 +13,7 @@ using namespace Rcpp;
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
-#include <zlib.h>
+// #include <zlib.h>
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 #include <boost/iostreams/device/file.hpp>
@@ -19,6 +21,8 @@ using namespace Rcpp;
 #include <boost/iostreams/copy.hpp>
 #include <boost/assign.hpp>
 #include <boost/algorithm/string/trim.hpp>
+
+#include <RcppGSL.h>
 #include <gsl/gsl_cdf.h>
 #include <gsl/gsl_sf_gamma.h>
 #include <gsl/gsl_sf_exp.h>
@@ -461,66 +465,66 @@ void read_tissue_markers_txt_file(string tissue_markers_file, int value_column_s
 	}
 	fin.close();
 }
-void read_tissue_markers_gz_file(string tissue_markers_file, int value_column_start_index, int num_tissue_types, Bins2Values & marker2beta, vector<string> & value_names)
-{
-	char buf[102400]; // suppose a line has max 102400 char.
-	//cerr << "reading '" << tissue_markers_file << "'" << endl;
-	// input is a gzip file
-	gzFile fin = gzopen(tissue_markers_file.c_str(), "rb");
-	if (fin == NULL){
-	  Rcpp::Rcerr << "Error: Unable to open " << tissue_markers_file << " in read_tissue_markers_gz_file()" << endl;
-		// exit(EXIT_FAILURE);
-	}
-	char *line_;
-	unsigned long i_line=0;
-	while ((line_ = gzgets(fin, buf, sizeof(buf))) != NULL) {
-		string line(line_);
-		trim(line);
-		//cerr << "Line: " << line << endl;
-		if (i_line==0) {
-			// skip the header line of tissue_markers_file
-			vector<string> items;
-			split(items, line, is_any_of("\t"));
-			for (int i=value_column_start_index-1; i<num_tissue_types+value_column_start_index-1; i++) {
-				value_names.push_back( items[i] );
-			}
-			i_line++;
-			continue;
-		}
-		if (line.empty()) {
-			// this is the last line of the file
-			break;
-		}
-		vector<string> items;
-		split(items, line, is_any_of("\t"));
-		if (value_column_start_index>items.size()) {
-		  Rcpp::Rcerr << "Error(read_tissue_markers_gz_file): the value column starts from Column " << value_column_start_index << " that is > total number of columns (" << items.size() << ") in Line " << i_line+1 << "!" << endl;
-			// exit(EXIT_FAILURE);
-		}
-		int marker_index = (int)atoi(items[0].c_str());
-		vector<double> values;
-		for (int i=value_column_start_index-1; i<num_tissue_types+value_column_start_index-1; i++) {
-			if (items[i].find(':') != std::string::npos) {
-				// found ':', two values
-				vector<string> pair;
-				split(pair, items[i], is_any_of(":"));
-				if (pair.size()!=2) {
-				  Rcpp::Rcerr << "Error(read_tissue_markers_gz_file): the value column " << (i+1) << " has " << pair.size() << " values (only " << pair.size() << " values) in Line " << i_line+1 << "!" << endl;
-					// exit(EXIT_FAILURE);
-				}
-				double a = (double)atof(pair[0].c_str());
-				double b = (double)atof(pair[1].c_str());
-				values.push_back( a/(a+b) );
-			} else {
-				// not found ':', just a single value
-				values.push_back( (double)atof(items[i].c_str()) );
-			}
-		}
-		marker2beta[marker_index] = values;
-		i_line++;
-	}
-	gzclose(fin);
-}
+// void read_tissue_markers_gz_file(string tissue_markers_file, int value_column_start_index, int num_tissue_types, Bins2Values & marker2beta, vector<string> & value_names)
+// {
+// 	char buf[102400]; // suppose a line has max 102400 char.
+// 	//cerr << "reading '" << tissue_markers_file << "'" << endl;
+// 	// input is a gzip file
+// 	gzFile fin = gzopen(tissue_markers_file.c_str(), "rb");
+// 	if (fin == NULL){
+// 	  Rcpp::Rcerr << "Error: Unable to open " << tissue_markers_file << " in read_tissue_markers_gz_file()" << endl;
+// 		// exit(EXIT_FAILURE);
+// 	}
+// 	char *line_;
+// 	unsigned long i_line=0;
+// 	while ((line_ = gzgets(fin, buf, sizeof(buf))) != NULL) {
+// 		string line(line_);
+// 		trim(line);
+// 		//cerr << "Line: " << line << endl;
+// 		if (i_line==0) {
+// 			// skip the header line of tissue_markers_file
+// 			vector<string> items;
+// 			split(items, line, is_any_of("\t"));
+// 			for (int i=value_column_start_index-1; i<num_tissue_types+value_column_start_index-1; i++) {
+// 				value_names.push_back( items[i] );
+// 			}
+// 			i_line++;
+// 			continue;
+// 		}
+// 		if (line.empty()) {
+// 			// this is the last line of the file
+// 			break;
+// 		}
+// 		vector<string> items;
+// 		split(items, line, is_any_of("\t"));
+// 		if (value_column_start_index>items.size()) {
+// 		  Rcpp::Rcerr << "Error(read_tissue_markers_gz_file): the value column starts from Column " << value_column_start_index << " that is > total number of columns (" << items.size() << ") in Line " << i_line+1 << "!" << endl;
+// 			// exit(EXIT_FAILURE);
+// 		}
+// 		int marker_index = (int)atoi(items[0].c_str());
+// 		vector<double> values;
+// 		for (int i=value_column_start_index-1; i<num_tissue_types+value_column_start_index-1; i++) {
+// 			if (items[i].find(':') != std::string::npos) {
+// 				// found ':', two values
+// 				vector<string> pair;
+// 				split(pair, items[i], is_any_of(":"));
+// 				if (pair.size()!=2) {
+// 				  Rcpp::Rcerr << "Error(read_tissue_markers_gz_file): the value column " << (i+1) << " has " << pair.size() << " values (only " << pair.size() << " values) in Line " << i_line+1 << "!" << endl;
+// 					// exit(EXIT_FAILURE);
+// 				}
+// 				double a = (double)atof(pair[0].c_str());
+// 				double b = (double)atof(pair[1].c_str());
+// 				values.push_back( a/(a+b) );
+// 			} else {
+// 				// not found ':', just a single value
+// 				values.push_back( (double)atof(items[i].c_str()) );
+// 			}
+// 		}
+// 		marker2beta[marker_index] = values;
+// 		i_line++;
+// 	}
+// 	gzclose(fin);
+// }
 
 //file of a single value (of each tissue) for each marker (generated by program "build_features_bins.py")
 //This file should have the same number lines (bins) as the number of markers (excluding complementary bins) in bins annotation file.
