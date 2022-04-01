@@ -11,13 +11,19 @@ author:
     affiliation:
       - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
       - Institute for Quantitative & Computational Biosciences, University of California at Los Angeles
+  - name: Xianghong Jasmine Zhou
+    affiliation:
+      - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
+      - Institute for Quantitative & Computational Biosciences, University of California at Los Angeles
 package: cfTools
 output: 
   BiocStyle::html_document:
     toc_float: true
   BiocStyle::pdf_document: default
 abstract: >
-  cfTools is an R package...
+  Cell-free DNA (cfDNA) in blood has emerged as an ideal surrogate for tumor biopsy. It can be obtained noninvasively, and provides a comprehensive land- scape of the heterogeneous genetic and epigenetic alterations in tumors. The major bottleneck of cfDNA application is bioinformatics analysis, because cfDNA possesses many unique properties that are not handled properly by general meth- ods. Here, we present a versatile informatics toolset for cfDNA data analysis to facilitate cfDNA-based cancer studies, including
+  * Epigenetic mapping: sensitive detection of tumor-derived cfDNA from blood
+  * Measuring tumor-derived cfDNA proportion and inferring the organ of origin noninvasive time-series monitoring
 vignette: >
   %\VignetteIndexEntry{cfTools-vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -33,9 +39,46 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-Given the cfMethyl-Seq data of a patient’s cell-free DNA (cfDNA) sample, for each cancer marker (tissue marker), we deconvolve the tumor-derived (tissue-specific) reads from all reads falling in the marker region. The read-based deconvolution exploits the pervasiveness of DNA methylation for signal enhancement. Specifically, we improved upon our previous probabilistic read deconvolution algorithm, i.e., CancerDetector [1], by (1) adding an “unknown” class to represent reads that cannot be classified to any known class (tumor type or tissue type), and (2) expanding the 2-class likelihood model to a k-class (k>=2)  model, for classifying reads into k different classes, and (3) For a given set of markers, we construct a profile vector where the length of the vector is the number of markers and the value in each entry is the normalized counts of tumor-derived (tissue-derived) reads. 
+Given the cfMethyl-Seq data of a patient's cell-free DNA (cfDNA) sample, for each cancer marker (or tissue marker), we deconvolve the tumor-derived (or tissue-specific) reads from all reads falling in the marker region. The read-based deconvolution algorithm exploits the pervasiveness of DNA methylation for signal enhancement. Specifically, we generalized upon our previous probabilistic read deconvolution algorithm, i.e., CancerDetector [1], by expanding the 2-class likelihood model to a $T$-class ($T\geq2$) model, for classifying reads into $T$ different classes, and for a given set of markers, we construct a profile vector where the length of the vector is the number of markers and the value in each entry is the normalized counts of tumor-derived (or tissue-derived) reads. This code can deconvolute the different sources of cfDNA reads in two contexts: (1) separating reads into tumor-derived reads and background reads; and (2) separating the reads from different tissues. This algorithm has been applied to two studies for cancer detection [1] and tissue mapping [2].
 
-Note that as described in the manuscript, this code can deconvolute the different sources of cfDNA reads in two contexts: (1) separating reads into tumor-derived reads and background reads; and (2) separating the reads from different tissues. 
+* Generalized cfDNA sequencing read deconvolution algorithm for both cancer detection and tissue mapping
+
+We aimed to infer $T$-tissue-type composition of a plasma cfDNA sample, which is denoted as a composition vector $\Theta=(\theta_1,\theta_2,\cdots,\theta_T)$ satisfying $0\leq \theta_i < 1$ and $\sum_{t=1}^{T}{\theta_t}=1$ and $\theta_t$ is the cfDNA fraction of tissue t in the plasma. Given a set of $T$-tissue-type methylation signatures denoted as $\Omega$, we used a collection of $N$ cfDNA sequencing reads that were mapped into the genomic regions of all these methylation signatures. This methylation data at individual read level could be represented by a set of $N$ sequencing reads or fragments $\mathbf{R}=({\sf read}_1,{\sf read}_2,\cdots,{\sf read}_N )$, where each read ${\sf read}_i$ was a sequence of binary values (0 or 1) indicating the methylation state of each CpG site covered by the $i$-th read (or fragment). Based on these denotations, we formulated the tissue composition inference problem as a maximum likelihood problem, which estimates the tissue composition $\Theta$ in plasma cfDNAs by maximizing the likelihood $P(\mathbf{R} | \Theta, \Omega)$ or denoted as $P_{\Omega}(\mathbf{R} | \Theta)$. This is formally expressed as shown below:
+
+$$
+\begin{align*}
+\max_{\Theta}\log P_{\Omega}(\mathbf{R} | \Theta) \text{,          s.t.} \sum_{t=1}^{T}{\theta_t}=1 
+\end{align*}
+$$
+
+\noindent where the log-likelihood $\log P_{\Omega}(\mathbf{R} | \Theta)$ is the summation of the log-likelihood of each cfDNA sequencing read:
+
+$$
+\begin{align*}
+\max_{\Theta}\log P_{\Omega}(\mathbf{R} | \Theta)=\sum_{i=1}^N\log P_{\Omega}({\sf read}_i | \Theta) 
+\end{align*}
+$$
+Since we have $T$ parameters $\theta_1,\theta_2,\cdots,\theta_T$ in this formulation, we cannot use the grid searching for each parameter as it is overly time consuming. Instead, we could employ the Expectation-Maximization (EM) clustering algorithm to solve this problem, where each tissue type could be regarded as a cluster with unknown prior probability $\theta_t$ and each read regarded as an object to be clustered. The EM clustering algorithm typically introduced a missing value or latent random variable $z_i$ for each ${\sf read}_i$ to indicate which tissue type $t$ this read originated from, i.e., $z_i=t$ and $z_i=1,2,\cdots,T$. This latent variable $z_i$ allows the categorical distribution ${\sf Cat}(T,\theta)$, therefore we have $P(z_i=t│\Theta)=\theta_t$. We rewrote $P_\Omega({\sf read}_i│\Theta)$ in the above equation as:
+
+$$
+\begin{align*}
+	P_{\Omega} \left({\sf read}_i│\Theta \right) &= \sum_{t=1}^T P_\Omega \left({\sf read}_i=t│\Theta \right) \\
+	&= \sum_{t=1}^T P\left(z_i=t|\Theta \right) P_\Omega \left({\sf read}_i│z_i=t \right) \\
+  &= \sum_{t=1}^T \theta_t P\left({\sf read}_i │ \Omega^t_{\sf marker({\sf read}_i)}\right)
+\end{align*}
+$$
+
+\noindent where $P\left({\sf read}_i│\Omega^t_{{\sf marker}({\sf read}_i\right)} )$ is the tissue-of-origin likelihood of the cfDNA ${\sf read}_i$ for tissue $t$, and $\Omega^t_{{\sf marker}({\sf read}_i)}$ is the methylation signature of tissue $t$ in the marker’s region that ${\sf read}_i$ is mapped to. Let $q(z_i=t)$ denote the posterior probability of $z_i=t$, i.e., $q(z_i=t)=P(z_i=t|{\sf read}_i,\Theta,\Omega)$. According to the EM algorithm, we deduced the following alternative steps:
+
+$$
+\begin{align*}
+  \text{E-step:}\qquad & q(z_i=t)=\frac{\theta_t P\left({\sf read}_i | \Omega^t_{{\sf marker}({\sf read}_i)} \right)} {\sum_{t=1}^T \theta_t P\left({\sf read}_i | \Omega^t_{{\sf marker}({\sf read}_i)} \right)} & \text{,     for } t=1,\cdots,T \\
+  \text{M-step:}\qquad & \theta_t = \frac{\sum^N_{i=1}q(z_i=t)}{N} & \text{,     for } t=1,\cdots,T \\
+\end{align*}
+$$
+
+According to the EM algorithm, starting with a random initial value $\theta$ and iteratively performing the above two equations, this objective function (i.e. the log-likelihood function) converged to a local maximum of the log-likelihood function. We repeated this EM algorithm with different random initialized values of $\theta$, and chose the solution with the maximum log-likelihood. In the E-step, the tissue-of-origin likelihood of a cfDNA ${\sf read}_i$ for tissue $t$ could be easily calculated as $P({\sf read}_i│\Omega)=\Omega^{m({\sf read}_i)} (1-Ω)^{u({\sf read}_i)}$, where $\Omega$ denotes $\Omega^t_{{\sf marker}({\sf read}_i)}$ and $m({\sf read}_i)$ and $u({\sf read}_i)$ are the numbers of methylated and unmethylated CpGs in ${\sf read}_i$, respectively.
+
 
 # Installation
 
@@ -129,11 +172,11 @@ head(output)
 
 
 # References
-[1] Li W, Li Q, Kang S, Same M, Zhou Y, Sun C, Liu CC, Matsuoka L, Sher L, Wong WH, Alber F, Zhou XJ. CancerDetector: ultrasensitive and non-invasive cancer detection at the resolution of individual reads using cell-free DNA methylation sequencing data. Nucleic Acids Res. 2018 Sep 6;46(15):e89. doi: 10.1093/nar/gky423. PMID: 29897492; PMCID: PMC6125664.
+[1] Li W, Li Q, Kang S, Same M, Zhou Y, Sun C, Liu CC, Matsuoka L, Sher L, Wong WH, Alber F, Zhou XJ. CancerDetector: ultrasensitive and non-invasive cancer detection at the resolution of individual reads using cell-free DNA methylation sequencing data. *Nucleic Acids Res.* 2018 Sep 6;46(15):e89. doi: 10.1093/nar/gky423. PMID: 29897492; PMCID: PMC6125664.
+
+[2] Del Vecchio G, Li Q, Li W, Thamotharan S, Tosevska A, Morselli M, Sung K, Janzen C, Zhou X, Pellegrini M, Devaskar SU. Cell-free DNA methylation and transcriptomic signature prediction of pregnancies with adverse outcomes. *Epigenetics.* Oct 13:1-20; doi: 10.1080/15592294.2020.1816774. PMID: 33045922; PMCID: PMC8143248.
 
 # Session info {.unnumbered}
 ```{r sessionInfo, echo=FALSE}
 sessionInfo()
 ```
-
-
