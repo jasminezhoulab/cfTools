@@ -1,17 +1,22 @@
 Package: cfTools
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Informatics Tools for Cell-Free DNA Study
 Version: 0.99.0
-Authors@R: person(given = "Ran",
-    family = "Hu",
-    role = c("aut", "cre"),
-    email = "huran@ucla.edu",
-    comment = c(ORCID = "0000-0002-0563-8957"))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-    Use four spaces when indenting paragraphs within the Description.
-    Use four spaces when indenting paragraphs within the Description.
-    At least three complete sentences.
+Authors@R: c(
+    person(given = "Ran",
+        family = "Hu",
+        role = c("aut", "cre"),
+        email = "huran@ucla.edu",
+        comment = c(ORCID = "0000-0002-0563-8957")
+    ),
+    person("Wenyuan", "Li", role = "aut"),
+    person(c("Xianghong", "Jasmine"), "Zhou", role = "aut")
+    )
+Description: cfTools is a versatile toolset of deconvoluting the cell-free DNA fragments 
+    (or sequencing reads) into multiple tissue types or tumor types. It can deconvolute 
+    the different sources of cfDNA sequencing reads in two contexts: (1) separating reads 
+    into tumor-derived reads and background reads; and (2) separating the reads from 
+    different tissues.
 License: file LICENSE
 Encoding: UTF-8
 Suggests:
@@ -25,10 +30,9 @@ Imports:
     Rcpp,
     utils
 StagedInstall: no
-SystemRequirements: GNU make, GNU Scientific Library (GSL)
+SystemRequirements:
 biocViews: Software, Sequencing, DNAMethylation, DifferentialMethylation
 VignetteBuilder: knitr
 LinkingTo: 
     Rcpp,
-    BH,
-    RcppGSL
+    BH

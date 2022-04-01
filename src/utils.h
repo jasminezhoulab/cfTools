@@ -26,7 +26,8 @@ void read_two_columns_of_list_strings_from_file(string input_file, vector<string
 void read_tissue_markers_txt_file(string tissue_markers_file, int value_column_start_index, int num_tissue_types, Bins2Values & bins2values, vector<string> & value_names);
 void read_tissue_markers_gz_file(string tissue_markers_file, int value_column_start_index, int num_tissue_types, Bins2Values & bins2values, vector<string> & value_names);
 
-unsigned long calc_read_probability_by_marker2beta(string reads_binning_file, Bins2Values & marker2beta, Matrix_Double& reads_likelihoods, Bins2UnsignedIntegers& marker2rowindexes, Bins2Value& marker2ambiguousreadcounts, vector<int>&Rm, vector<int>& Rl, double likelihood_ratio_cutoff);
+unsigned long calc_read_probability_by_marker2beta_from_reads_binning_text_file(string reads_binning_file, Bins2Values & marker2beta, Matrix_Double& reads_likelihoods, Bins2UnsignedIntegers& marker2rowindexes, Bins2Value& marker2ambiguousreadcounts, vector<int>&Rm, vector<int>& Rl, double likelihood_ratio_cutoff);
+unsigned long calc_read_probability_by_marker2beta_from_reads_binning_gzip_file(string reads_binning_file, Bins2Values & marker2beta, Matrix_Double& reads_likelihoods, Bins2UnsignedIntegers& marker2rowindexes, Bins2Value& marker2ambiguousreadcounts, vector<int>&Rm, vector<int>& Rl, double likelihood_ratio_cutoff);
 
 void get_reads_methy_data_from_reads_binning_file(string reads_binning_file,
 	vector<int> & num_cpg_sites, vector<int> & num_methy_cpg_sites);

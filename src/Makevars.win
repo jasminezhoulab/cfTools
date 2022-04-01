@@ -1,5 +1,0 @@
-#PKG_LIBS = $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "Rcpp:::LdFlags()")
-#PKG_CPPFLAGS = -I${BOOSTLIB}
-
-PKG_CPPFLAGS=-I$(LIB_GSL)/include -I../inst/include
-PKG_LIBS="-L$(LIB_GSL)/lib/$(R_ARCH)" -lgsl -lgslcblas

@@ -146,7 +146,12 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	Bins2Value marker2ambiguousreadcounts;
 	vector<int> Rm, Rl;
 	unsigned long num_total_reads;
-	num_total_reads = calc_read_probability_by_marker2beta(reads_binning_file, marker2beta, reads_likelihoods, marker2rowindexes, marker2ambiguousreadcounts, Rm, Rl, min_likelihood_ratio_cutoff);
+	if (str_ends_with(reads_binning_file,fileext_gzip)) {
+		// num_total_reads = calc_read_probability_by_marker2beta_from_reads_binning_gzip_file(reads_binning_file, marker2beta, reads_likelihoods, marker2rowindexes, marker2ambiguousreadcounts, Rm, Rl, min_likelihood_ratio_cutoff);
+		Rcpp::Rcout << "Input has to be a txt file" << endl;
+	} else {
+		num_total_reads = calc_read_probability_by_marker2beta_from_reads_binning_text_file(reads_binning_file, marker2beta, reads_likelihoods, marker2rowindexes, marker2ambiguousreadcounts, Rm, Rl, min_likelihood_ratio_cutoff);
+	}
 	int num_reads_non_ambiguous = (int)reads_likelihoods.get_row_num();
 	int num_reads_ambiguous = 0;
 	Bins2Value::iterator m2amb_iter;

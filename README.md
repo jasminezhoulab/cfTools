@@ -1,12 +1,10 @@
 # cfTools
 
-XXXXX
+cfTools is a versatile toolset of deconvoluting the cell-free DNA fragments (or sequencing reads) into multiple tissue types or tumor types.
 
 ## Introduction
 
-Given the cfMethyl-Seq data of a patient’s cfDNA sample, for each cancer marker (tissue marker), we deconvolve the tumor-derived (tissue-specific) reads from all reads falling in the marker region. The read-based deconvolution exploits the pervasiveness of DNA methylation for signal enhancement. Specifically, we improved upon our previous probabilistic read deconvolution algorithm, i.e., CancerDetector [1], by (1) adding an “unknown” class to represent reads that cannot be classified to any known class (tumor type or tissue type), and (2) expanding the 2-class likelihood model to a k-class (k>=2)  model, for classifying reads into k different classes, and (3) For a given set of markers, we construct a profile vector where the length of the vector is the number of markers and the value in each entry is the normalized counts of tumor-derived (tissue-derived) reads. 
-
-Note that as described in the manuscript, this code can deconvolute the different sources of cfDNA reads in two contexts: (1) separating reads into tumor-derived reads and background reads; and (2) separating the reads from different tissues. 
+Given the cfMethyl-Seq data of a patient's cell-free DNA (cfDNA) sample, for each cancer marker (or tissue marker), we deconvolve the tumor-derived (or tissue-specific) reads from all reads falling in the marker region. The read-based deconvolution algorithm exploits the pervasiveness of DNA methylation for signal enhancement. Specifically, we generalized upon our previous probabilistic read deconvolution algorithm, i.e., CancerDetector, by expanding the 2-class likelihood model to a T-class (T>=2 model, for classifying reads into T different classes, and for a given set of markers, we construct a profile vector where the length of the vector is the number of markers and the value in each entry is the normalized counts of tumor-derived (or tissue-derived) reads. This code can deconvolute the different sources of cfDNA reads in two contexts: (1) separating reads into tumor-derived reads and background reads; and (2) separating the reads from different tissues. This algorithm has been applied to two studies for cancer detection and tissue mapping. 
 
 ## Installation
 
@@ -30,6 +28,3 @@ See the detailed documentation for `cfTools` using the following commands in you
 ```
 browseVignettes("cfTools")
 ```
-
-## Citation
-XXXXXXXX
