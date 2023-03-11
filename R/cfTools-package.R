@@ -6,5 +6,9 @@ NULL
 NULL
 #' @import Rcpp
 NULL
+#' @importFrom utils read.csv
+NULL
+#' @importFrom utils write.table
+NULL
 #' @importFrom utils read.delim
 NULL

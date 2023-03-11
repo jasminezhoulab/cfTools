@@ -113,14 +113,14 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	parse_command_line(reads_binning_file, num_tissues, min_likelihood_ratio_cutoff, tissue_markers_file,
                     em_algorithm_type, output_file, output_type, em_max_iterations);
 
-  Rcpp::Rcerr  << "reads methylation states file: " << reads_binning_file << endl;
-  Rcpp::Rcerr  << "tissue markers file: " << tissue_markers_file << endl;
-  Rcpp::Rcerr  << "number of tissue types: " << num_tissues << endl;
+  Rcpp::Rcerr  << "reads methylation status file: " << reads_binning_file << endl;
+  Rcpp::Rcerr  << "marker file: " << tissue_markers_file << endl;
+  Rcpp::Rcerr  << "number of sample types: " << num_tissues << endl;
 	if (min_likelihood_ratio_cutoff==-1.0)
 	  Rcpp::Rcerr  << "No likilihood-ratio-based reads filtering" << endl;
 	else
 	  Rcpp::Rcerr  << "min likelihood ratio cutoff (for each read): " << min_likelihood_ratio_cutoff << endl;
-	Rcpp::Rcerr  << "tissue deconvolution algorithm: " << em_algorithm_type << endl;
+	Rcpp::Rcerr  << "read deconvolution algorithm: " << em_algorithm_type << endl;
 	Rcpp::Rcerr  << "EM max iterations: " << em_max_iterations << endl;
 	Rcpp::Rcerr  << "output type: " << output_type << endl;
 	Rcpp::Rcerr  << "output file: " << output_file << endl;
@@ -132,7 +132,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	vector<string> tissue_names;
 	if (str_ends_with(tissue_markers_file,fileext_gzip)) {
 		// read_tissue_markers_gz_file(tissue_markers_file, 2, num_tissues, marker2beta, tissue_names);
-		Rcpp:Rcout << "Input has to be a txt file" << endl;
+		Rcpp::Rcout << "Input has to be a txt file" << endl;
 	} else {
 		read_tissue_markers_txt_file(tissue_markers_file, 2, num_tissues, marker2beta, tissue_names);
 	}

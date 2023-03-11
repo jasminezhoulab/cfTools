@@ -41,8 +41,8 @@ Read deconvolution.
 \examples{
 ## input files
 demo.dir <- system.file("extdata", package="cfTools")
-readsBinningFile <- file.path(demo.dir, "example.reads.txt")
-tissueMarkersFile <- file.path(demo.dir, "example.markers.txt")
+readsBinningFile <- file.path(demo.dir, "ReadDeconvolution.reads.txt")
+tissueMarkersFile <- file.path(demo.dir, "ReadDeconvolution.markers.txt")
 outputType <- "tissueFraction+readCountPerBillion"
 outputFile <- file.path(demo.dir, "example.profile")
 numTissues <- 7

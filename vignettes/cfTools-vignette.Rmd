@@ -113,7 +113,7 @@ We used three column to represent each read's information as below:
 
 For example:
 ```{r}
-readsBinningFile <- file.path(demo.dir, "example.reads.txt")
+readsBinningFile <- file.path(demo.dir, "ReadDeconvolution.reads.txt")
 readsBinning <- read.table(readsBinningFile, header=TRUE)
 head(readsBinning)
 ```
@@ -127,7 +127,7 @@ Each line is a marker including its genomic region and methylation pattern (two 
 
 For example:
 ```{r}
-tissueMarkersFile <- file.path(demo.dir, "example.markers.txt")
+tissueMarkersFile <- file.path(demo.dir, "ReadDeconvolution.markers.txt")
 tissueMarkers <- read.table(tissueMarkersFile, header=TRUE)
 head(tissueMarkers)
 ```
@@ -148,7 +148,7 @@ outputType <- "tissueFraction+readCountPerBillion"
 outputFile <- file.path(demo.dir, "example.profile")
 numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
-likelihoodRatioThreshold <- 2.0
+likelihoodRatioThreshold <- 2
 emMaxIterations <- 100
 ```
 
@@ -160,8 +160,7 @@ The first three lines are header lines, indicating the column names and the glob
 - Column 2+: read count of each tissue type in the marker, and the read count of the unknown class is listed in the last column of each line
 
 ```{r, message=TRUE}
-cfSort(readsBinningFile, tissueMarkersFile, outputType, outputFile, 
-       numTissues, emAlgorithmType, likelihoodRatioThreshold, emMaxIterations)
+cfSort(readsBinningFile, tissueMarkersFile, outputType, outputFile, numTissues, emAlgorithmType, likelihoodRatioThreshold, emMaxIterations)
 
 output <- read.table(outputFile, header=TRUE)
 head(output)
