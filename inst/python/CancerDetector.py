@@ -50,7 +50,8 @@ readProbFile = sys.argv[1]
 lambda_ = float( sys.argv[2] )
 output_dir = sys.argv[3]
 id = sys.argv[4]
-output_file = os.path.join(output_dir, id+".tumor_burden.txt")
+if output_dir!="" and id!="":
+	output_file = os.path.join(output_dir, id+".tumor_burden.txt")
 
 markerIdReads, p = loadReadProbilities( readProbFile )
 
@@ -82,10 +83,11 @@ for round in range(nRound):
 	good_reads_indexes = np.where( ismember(markerIdReads, good_marker_ids) )[0];
 	p_goodmarkers = p[good_reads_indexes, :]
 
-with open(output_file, 'w') as temp_file:
-	temp_file.write('%6.4f\t%6.4f\n'%(thetaVectorUpdateBest[0], thetaVectorUpdateBest[1]))
+if output_dir!="" and id!="":
+	with open(output_file, 'w') as temp_file:
+		temp_file.write('%6.4f\t%6.4f\n'%(thetaVectorUpdateBest[0], thetaVectorUpdateBest[1]))
 
-print("cfDNA tumor burden: %6.4f"%(thetaVectorUpdateBest[0]))
-print("normal cfDNA fraction: %6.4f"%(thetaVectorUpdateBest[1]))
+# print("cfDNA tumor burden: %6.4f"%(thetaVectorUpdateBest[0]))
+# print("normal cfDNA fraction: %6.4f"%(thetaVectorUpdateBest[1]))
 # sys.stdout.write('%6.4f\t%6.4f\n'%(thetaVectorUpdateBest[0], thetaVectorUpdateBest[1]))
 

@@ -52,7 +52,7 @@ def read_paired_values_file_of_bins(file):
 	bins_index_list = []
 	with open(file) as f:
 		column_names = next(f).rstrip().split('\t')
-		class_names = column_names[4:]
+		class_names = column_names[1:] ## remove chr start end columns
 		n_items = len(column_names)
 		for c in class_names:
 			bins2pairedvalues[c] = {}
@@ -60,7 +60,7 @@ def read_paired_values_file_of_bins(file):
 			items = line.rstrip().split('\t')
 			bin_index = items[0]
 			bins_index_list.append( bin_index )
-			for i in range(4, n_items):
+			for i in range(1, n_items): ## remove chr start end columns
 				class_name = column_names[i]
 				alpha, beta = map(float, re.split(':|,', items[i]))
 				if (alpha+beta)>160:
@@ -74,7 +74,8 @@ reads_binning_file = sys.argv[1]
 markers_file = sys.argv[2]
 output_dir = sys.argv[3]
 id = sys.argv[4]
-output_file = os.path.join(output_dir, id+".likelihood.txt")
+if output_dir!="" and id!="":
+	output_file = os.path.join(output_dir, id+".likelihood.txt")
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
@@ -106,12 +107,13 @@ fin = open(reads_binning_file,'r')
 # fin.next() # skip header line
 lines = fin.readlines()[1:]
 
-with open(output_file, 'w') as temp_file:
-	temp_file.write('marker_index\t%s'%('\t'.join(class_names))+"\n")
+if output_dir!="" and id!="":
+	with open(output_file, 'w') as temp_file:
+		temp_file.write('markerName\t%s'%('\t'.join(class_names))+"\n")
 # print('marker_index\t%s'%('\t'.join(class_names)))
 for line in lines:
 	# print line.rstrip()
-	marker_index, _, methylation_states = line.rstrip().split('\t')
+	marker_index, methylation_states = line.rstrip().split('\t') ## remove the middle column
 # Calculate the likelihood of each read that belongs to a class
 #    the formula is B(x+alpha, 1-x+beta)/B(alpha,beta)
 #    where B() is beta function, x is methylation status of a CpG site (0 or 1), alpha and beta are a pair of values for describing a Beta-distribution provided by the input parameter "bins2pairedvalues".
@@ -123,8 +125,9 @@ for line in lines:
 		likelihood = calc_read_likelihood(methylation_states, alpha, beta, B)
 		likelihoods_list.append( likelihood )
 		# print '%s: a=%g, b=%g, ll=%g'%(c,alpha,beta,likelihood)
-	with open(output_file, 'a') as temp_file:
-		temp_file.write('%s\t%s'%(marker_index, '\t'.join(['%g'%ll for ll in likelihoods_list]))+"\n")
+	if output_dir!="" and id!="":
+		with open(output_file, 'a') as temp_file:
+			temp_file.write('%s\t%s'%(marker_index, '\t'.join(['%g'%ll for ll in likelihoods_list]))+"\n")
 	# print('%s\t%s'%(marker_index, '\t'.join(['%g'%ll for ll in likelihoods_list])))
 if reads_binning_file != 'stdin':
 	fin.close()

@@ -2,7 +2,7 @@
 % Please edit documentation in R/CollapseCpGs.R
 \name{CollapseCpGs}
 \alias{CollapseCpGs}
-\title{Generate methylation status of CpGs on the same read}
+\title{Generate fragment-level methylation states of CpGs}
 \usage{
 CollapseCpGs(CpG_OT, CpG_OB, output.dir = "", id = "", python = "python")
 }
@@ -23,7 +23,7 @@ which is one of the outputs from `bismark methylation extractor`.}
 a data frame in BED file format and/or written to an output BED file.
 }
 \description{
-Collapse all CpGs corresponding to the same read onto one line in output.
+Collapse the methylation states of all CpGs corresponding to the same fragment onto one line in output.
 }
 \examples{
 ## input files

@@ -2,7 +2,7 @@
 % Please edit documentation in R/GenerateFragMeth.R
 \name{GenerateFragMeth}
 \alias{GenerateFragMeth}
-\title{Generate fragment level methylation status}
+\title{Generate fragment-level information about methylation states}
 \usage{
 GenerateFragMeth(
   frag_bed,
@@ -13,9 +13,9 @@ GenerateFragMeth(
 )
 }
 \arguments{
-\item{frag_bed}{a BED file containing information for every read, which is the output of CollapsePEReads().}
+\item{frag_bed}{a BED file containing information for every fragment, which is the output of CollapsePEReads().}
 
-\item{meth_bed}{a BED file containing methylation status on every read, which is the output of CollapseCpGs().}
+\item{meth_bed}{a BED file containing methylation states on every fragment, which is the output of CollapseCpGs().}
 
 \item{output.dir}{a path to the output directory. Default is "", which means the output will not be written into a file.}
 
@@ -27,13 +27,13 @@ GenerateFragMeth(
 a data frame in BED file format and/or written to an output BED file.
 }
 \description{
-Join two data frames containing read information and methylation status on each read into one data frame.
+Join two data frames containing the fragment information and the methylation states on each fragment into one data frame.
 }
 \examples{
 ## input files
 demo.dir <- system.file("extdata", package="cfTools")
-frag_bed <- read.delim(file.path(demo.dir, "demo.refo_frag.bed"))
-meth_bed <- read.delim(file.path(demo.dir, "demo.refo_meth.bed"))
+frag_bed <- read.delim(file.path(demo.dir, "demo.refo_frag.bed"), colClasses = "character")
+meth_bed <- read.delim(file.path(demo.dir, "demo.refo_meth.bed"), colClasses = "character")
 
 output <- GenerateFragMeth(frag_bed, meth_bed)
 

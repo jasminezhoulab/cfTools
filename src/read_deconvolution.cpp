@@ -113,20 +113,20 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	parse_command_line(reads_binning_file, num_tissues, min_likelihood_ratio_cutoff, tissue_markers_file,
                     em_algorithm_type, output_file, output_type, em_max_iterations);
 
-  Rcpp::Rcerr  << "reads methylation status file: " << reads_binning_file << endl;
-  Rcpp::Rcerr  << "marker file: " << tissue_markers_file << endl;
-  Rcpp::Rcerr  << "number of sample types: " << num_tissues << endl;
-	if (min_likelihood_ratio_cutoff==-1.0)
-	  Rcpp::Rcerr  << "No likilihood-ratio-based reads filtering" << endl;
-	else
-	  Rcpp::Rcerr  << "min likelihood ratio cutoff (for each read): " << min_likelihood_ratio_cutoff << endl;
-	Rcpp::Rcerr  << "read deconvolution algorithm: " << em_algorithm_type << endl;
-	Rcpp::Rcerr  << "EM max iterations: " << em_max_iterations << endl;
-	Rcpp::Rcerr  << "output type: " << output_type << endl;
-	Rcpp::Rcerr  << "output file: " << output_file << endl;
-	Rcpp::Rcerr  << endl;
+//   Rcpp::Rcerr  << "fragment-level methylation states file: " << reads_binning_file << endl;
+//   Rcpp::Rcerr  << "marker file: " << tissue_markers_file << endl;
+//   Rcpp::Rcerr  << "number of sample types: " << num_tissues << endl;
+// 	if (min_likelihood_ratio_cutoff==-1.0)
+// 	  Rcpp::Rcerr  << "No likilihood-ratio-based reads filtering" << endl;
+// 	else
+// 	  Rcpp::Rcerr  << "min likelihood ratio cutoff (for each read): " << min_likelihood_ratio_cutoff << endl;
+// 	Rcpp::Rcerr  << "read deconvolution algorithm: " << em_algorithm_type << endl;
+// 	Rcpp::Rcerr  << "EM max iterations: " << em_max_iterations << endl;
+// 	Rcpp::Rcerr  << "output type: " << output_type << endl;
+// 	Rcpp::Rcerr  << "output file: " << output_file << endl;
+// 	Rcpp::Rcerr  << endl;
 
-	Rcpp::Rcerr  << "reading " << tissue_markers_file << " ..." << endl;
+	// Rcpp::Rcerr  << "reading " << tissue_markers_file << " ..." << endl;
 	string fileext_gzip = ".gz";
 	Bins2Values marker2beta;
 	vector<string> tissue_names;
@@ -140,7 +140,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	//write_Bins2Values(marker2beta, tissue_names, debug_file, false);
 	//exit(EXIT_SUCCESS);
 
-	Rcpp::Rcerr  << "calculating reads likelihoods ..." << endl;
+	// Rcpp::Rcerr  << "calculating reads likelihoods ..." << endl;
 	Matrix_Double reads_likelihoods((unsigned int)num_tissues);
 	Bins2UnsignedIntegers marker2rowindexes;
 	Bins2Value marker2ambiguousreadcounts;
@@ -158,9 +158,9 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	for (m2amb_iter=marker2ambiguousreadcounts.begin(); m2amb_iter!=marker2ambiguousreadcounts.end(); m2amb_iter++) {
 		num_reads_ambiguous += (int)(m2amb_iter->second);
 	}
-	Rcpp::Rcerr  << "#reads_total: " << num_total_reads << endl;
-	Rcpp::Rcerr  << "#reads_covering_markers (non-ambiguous): " << num_reads_non_ambiguous << endl;
-	Rcpp::Rcerr  << "#reads_covering_markers (ambiguous): " << num_reads_ambiguous << endl;
+	// Rcpp::Rcerr  << "#reads_total: " << num_total_reads << endl;
+	// Rcpp::Rcerr  << "#reads_covering_markers (non-ambiguous): " << num_reads_non_ambiguous << endl;
+	// Rcpp::Rcerr  << "#reads_covering_markers (ambiguous): " << num_reads_ambiguous << endl;
 
 	//////////////////////////////
 	////// begin for debug
@@ -180,7 +180,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 	//// end for debug
 	//////////////////////////////
 
-	Rcpp::Rcerr  << "perform " << em_algorithm_type << " ..." << endl;
+	// Rcpp::Rcerr  << "perform " << em_algorithm_type << " ..." << endl;
 	vector<double> theta;
 	//cout << "debug before em_type.compare" << endl << flush;
 	if (em_algorithm_type.compare("em.global.known")==0) {
@@ -193,25 +193,26 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		if (output_type=="tissueFraction") {
 			ofstream fout(output_file.c_str());
 			if (fout.is_open()) {
-				print_vec(fout, tissue_names, "\t", "#");
+				print_vec(fout, tissue_names, "\t");
 				fout << endl;
 				fout.precision(6);
-				print_vec(fout, theta, "\t", "#");
-				fout << endl << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << endl << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << endl;
+				print_vec(fout, theta, "\t");
+				// fout << endl << num_reads_ambiguous << endl;
+				// fout << endl << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << endl << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << endl;
 				fout.close();
 			}
 		} else if (output_type.find("readCount")!=std::string::npos) {
-		  Rcpp::Rcerr  << "Count reads of each marker by reads posterior probabilities: " << output_type << " ..." << endl;
+		  // Rcpp::Rcerr  << "Count reads of each marker by reads posterior probabilities: " << output_type << " ..." << endl;
 			double unit = 1e6 / num_total_reads; // default unit is readCountPerMillion
 			if (output_type.find("readCountPerMillion")!=std::string::npos) {
 				unit = 1e6 / num_total_reads;
-			  Rcpp::Rcerr  << "   unit: 1e6 / #total_reads = " << unit << endl;
+			  // Rcpp::Rcerr  << "   unit: 1e6 / #total_reads = " << unit << endl;
 			} else if (output_type.find("readCountPerBillion")!=std::string::npos) {
 				unit = 1e9 / num_total_reads;
-			  Rcpp::Rcerr  << "   unit: 1e9 / #total_reads = " << unit << endl;
+			  // Rcpp::Rcerr  << "   unit: 1e9 / #total_reads = " << unit << endl;
 			} else if (output_type.find("readCountRaw")!=std::string::npos) {
 				unit = 1.0;
-			  Rcpp::Rcerr  << "   unit: " << unit << endl;
+			  // Rcpp::Rcerr  << "   unit: " << unit << endl;
 			}
 			q.set_row_labels(reads_likelihoods.get_row_labels());
 
@@ -219,11 +220,11 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 			readCounts_by_reads_posterior_probability_version_regular(q, unit, readCounts);
 			ofstream fout(output_file.c_str());
 			if (fout.is_open()) {
-				print_vec(fout, tissue_names, "\t", "#marker_index\t");
+				print_vec(fout, tissue_names, "\t");
 				fout << endl;
 				fout.precision(6);
-				print_vec(fout, theta, "\t", "#tissue_fractions\t");
-				fout << endl << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << "\tunit: " << unit << endl;
+				print_vec(fout, theta, "\t");
+				// fout << endl << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << "\tunit: " << unit << endl;
 				fout << readCounts;
 				fout.close();
 			}
@@ -252,26 +253,29 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		if (output_type=="tissueFraction") {
 			ofstream fout(output_file.c_str());
 			if (fout.is_open()) {
-				print_vec(fout, tissue_names, "\t", "#");
+				print_vec(fout, tissue_names, "\t");
 				fout << "\tunknown" << endl;
 				fout.precision(6);
-				print_vec(fout, theta, "\t", "#");
-				fout << endl << "#total_reads: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << endl << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << endl;
+				print_vec(fout, theta, "\t");
+				fout << "\t" << theta_unknown << endl;
+				// fout << endl;
+				// fout << endl << num_reads_ambiguous << endl;
+				// fout << endl << "#total_reads: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << endl << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << endl;
 				fout.close();
 			}
 		} else if (output_type.find("readCount")!=std::string::npos) {
-		  Rcpp::Rcerr  << "Count reads of each marker by reads posterior probabilities: " << output_type << " ..." << endl;
+		  // Rcpp::Rcerr  << "Count reads of each marker by reads posterior probabilities: " << output_type << " ..." << endl;
 			double unit = 1e6 / num_total_reads; // default unit is readCountPerMillion
 			if (output_type.find("readCountPerMillion")!=std::string::npos) {
 				unit = 1e6 / num_total_reads;
-			  Rcpp::Rcerr  << "   unit: 1e6 / #total_reads = " << unit << endl;
+			  // Rcpp::Rcerr  << "   unit: 1e6 / #total_reads = " << unit << endl;
 			} else if (output_type.find("readCountPerBillion")!=std::string::npos) {
 				unit = 1e9 / num_total_reads;
 				//unit = 1.0;  // for debug only
-				Rcpp::Rcerr  << "   unit: 1e9 / #total_reads = " << unit << endl;
+				// Rcpp::Rcerr  << "   unit: 1e9 / #total_reads = " << unit << endl;
 			} else if (output_type.find("readCountRaw")!=std::string::npos) {
 				unit = 1.0;
-			  Rcpp::Rcerr  << "   unit: " << unit << endl;
+			  // Rcpp::Rcerr  << "   unit: " << unit << endl;
 			}
 			q.set_row_labels(reads_likelihoods.get_row_labels());
 
@@ -283,12 +287,12 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 			}
 			ofstream fout(output_file.c_str());
 			if (fout.is_open()) {
-				print_vec(fout, tissue_names, "\t", "#marker_index\t");
+				print_vec(fout, tissue_names, "\t");
 				fout << "\tunknown" << endl;
 				fout.precision(6);
-				print_vec(fout, theta, "\t", "#tissue_fractions\t");
+				print_vec(fout, theta, "\t");
 				fout << "\t" << theta_unknown << endl;
-				fout << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << "\tunit: " << unit << endl;
+				// fout << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << "\tunit: " << unit << endl;
 				readCounts.print_with_additional_column_of_Bins2Value(fout, marker2ambiguousreadcounts);
 				//fout << readCounts;
 				fout.close();
@@ -296,9 +300,9 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		}
 		//////////////////////////////
 		////// begin for debug
-		Rcpp::Rcerr  << "tissue fractions: ";
-		print_vec(Rcpp::Rcerr , theta, ", ");
-		Rcpp::Rcerr << ", " << theta_unknown << endl;
+		// Rcpp::Rcerr  << "tissue fractions: ";
+		// print_vec(Rcpp::Rcerr , theta, ", ");
+		// Rcpp::Rcerr << ", " << theta_unknown << endl;
 		////// end for debug
 		//////////////////////////////
 	}

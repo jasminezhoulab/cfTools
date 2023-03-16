@@ -28,7 +28,8 @@ Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 Imports: 
     Rcpp,
-    utils
+    utils,
+    GenomicRanges
 StagedInstall: no
 SystemRequirements: Python, numpy, scipy
 biocViews: Software, Sequencing, DNAMethylation, DifferentialMethylation

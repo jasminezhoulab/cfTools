@@ -4,39 +4,27 @@
 \alias{CancerDetector}
 \title{Cancer Detector}
 \usage{
-CancerDetector(
-  readsBinningFile,
-  tissueMarkersFile,
-  output.dir,
-  id,
-  python = "python"
-)
+CancerDetector(readsBinningFile, tissueMarkersFile, python = "python")
 }
 \arguments{
-\item{readsBinningFile}{input cfDNA methylation sequencing reads file, either in plain text or compressed form.}
+\item{readsBinningFile}{a file of the fragment-level methylation states of reads that mapped to the markers.}
 
-\item{tissueMarkersFile}{input markers file in plain text. Each marker for each tissue type has either a median beta value or a paired shape parameters of beta-distribution from the tissue population of tissue types.}
-
-\item{output.dir}{a path to the output directory. Default is "", which means the output will not be written into a file.}
-
-\item{id}{an ID name for the input data. Default is "", which means the output will not be written into a file.}
+\item{tissueMarkersFile}{a file of paired shape parameters of beta distributions for markers.}
 
 \item{python}{a path to Python 3. Default is "python".}
 }
 \value{
-an output file.
+cfDNA tumor burden and normal cfDNA fraction.
 }
 \description{
-Detect cancer
+Detect tumor-derived cfDNA and estimate the tumor burden.
 }
 \examples{
 ## input files
 demo.dir <- system.file("extdata", package="cfTools")
 readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt")
 tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt")
-output.dir <- file.path(demo.dir)
-id <- "CancerDetector"
 
-CancerDetector(readsBinningFile, tissueMarkersFile, output.dir, id)
+CancerDetector(readsBinningFile, tissueMarkersFile)
 
 }

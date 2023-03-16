@@ -1,5 +1,5 @@
 ---
-title: "Introduction to cfTools"
+title: "Analyzing cell-free DNA methylation data with cfTools"
 author: 
   - name: Ran Hu
     affiliation:
@@ -10,7 +10,6 @@ author:
   - name: Wenyuan Li
     affiliation:
       - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
-      - Institute for Quantitative & Computational Biosciences, University of California at Los Angeles
   - name: Xianghong Jasmine Zhou
     affiliation:
       - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
@@ -21,7 +20,7 @@ output:
     toc_float: true
   BiocStyle::pdf_document: default
 abstract: >
-  Cell-free DNA (cfDNA) in blood has emerged as an ideal surrogate for tumor biopsy. It can be obtained noninvasively, and provides a comprehensive landscape of the heterogeneous genetic and epigenetic alterations in tumors. The major bottleneck of cfDNA application is bioinformatics analysis, because cfDNA possesses many unique properties that are not handled properly by general methods. Here, we present a versatile informatics toolset for cfDNA data analysis to facilitate cfDNA-based cancer studies, including (1) Epigenetic mapping: sensitive detection of tumor-derived cfDNA from blood; (2) Measuring tumor-derived cfDNA proportion and inferring the organ of origin noninvasive time-series monitoring.
+  Cell-free DNA (cfDNA) in blood has emerged as an ideal surrogate for tumor biopsy. It can be obtained noninvasively, and provides a comprehensive landscape of the heterogeneous genetic and epigenetic alterations in tumors. The `r Biocpkg("cfTools")` package provides methods for cfDNA methylation data analysis to facilitate cfDNA-based cancer studies, including (1) cancer detection: sensitively detect tumor-derived cfDNA to determine whether a sample is from a cancer or normal patient; (2) tissue deconvolution: infer the tissue type composition of a plasma cfDNA sample. Note that this vignette is modularized and exmaple datasets used in different modules may not be relevant.
 vignette: >
   %\VignetteIndexEntry{cfTools-vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,44 +36,21 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-Given the methylation sequencing data of a patient's cell-free DNA (cfDNA) sample, for each cancer marker (or tissue marker), we deconvolve the tumor-derived (or tissue-specific) reads from all reads falling in the marker region. The read-based deconvolution algorithm exploits the pervasiveness of DNA methylation for signal enhancement. Specifically, we generalized upon our previous probabilistic read deconvolution algorithm, i.e., CancerDetector [1], by expanding the 2-class likelihood model to a $T$-class ($T\geq2$) model, for classifying reads into $T$ different classes, and for a given set of markers, we construct a profile vector where the length of the vector is the number of markers and the value in each entry is the normalized counts of tumor-derived (or tissue-derived) reads. This code can deconvolute the different sources of cfDNA reads in two contexts: (1) separating reads into tumor-derived reads and background reads; and (2) separating the reads from different tissues. This algorithm has been applied to two studies for cancer detection [1] and tissue mapping [2].
+Given the methylation sequencing data of a patient's cell-free DNA (cfDNA) sample, for each cancer marker or tissue marker, we deconvolve the tumor-derived or tissue-specific reads from all reads falling in the marker region. Our read-based deconvolution algorithm exploits the pervasiveness of DNA methylation for signal enhancement, therefore can sensitively identify a trace amount of tumor-specific or tissue-specific cfDNA in plasma. 
 
-## Generalized cfDNA sequencing read deconvolution algorithm for both cancer detection and tissue mapping
+`r Biocpkg("cfTools")` can deconvolve different sources of cfDNA fragments (or reads) in two contexts:
 
-We aimed to infer $T$-tissue-type composition of a plasma cfDNA sample, which is denoted as a composition vector $\Theta=(\theta_1,\theta_2,\cdots,\theta_T)$ satisfying $0\leq \theta_i < 1$ and $\sum_{t=1}^{T}{\theta_t}=1$ and $\theta_t$ is the cfDNA fraction of tissue t in the plasma. Given a set of $T$-tissue-type methylation signatures denoted as $\Omega$, we used a collection of $N$ cfDNA sequencing reads that were mapped into the genomic regions of all these methylation signatures. This methylation data at individual read level could be represented by a set of $N$ sequencing reads or fragments $\mathbf{R}=({\sf read}_1,{\sf read}_2,\cdots,{\sf read}_N )$, where each read ${\sf read}_i$ was a sequence of binary values (0 or 1) indicating the methylation state of each CpG site covered by the $i$-th read (or fragment). Based on these denotations, we formulated the tissue composition inference problem as a maximum likelihood problem, which estimates the tissue composition $\Theta$ in plasma cfDNAs by maximizing the likelihood $P(\mathbf{R} | \Theta, \Omega)$ or denoted as $P_{\Omega}(\mathbf{R} | \Theta)$. This is formally expressed as shown below:
+1. Cancer detection [1]: separating cfDNA fragments into tumor-derived fragments and background normal fragments (2 classes).
 
-$$
-\begin{align}
-\max_{\Theta}\log P_{\Omega}(\mathbf{R} | \Theta) \text{,          s.t.} \sum_{t=1}^{T}{\theta_t}=1 
-\end{align}
-$$
+2. Tissue deconvolution [2]: separating cfDNA fragments from different tissues (> 2 classes). 
 
-\noindent where the log-likelihood $\log P_{\Omega}(\mathbf{R} | \Theta)$ is the summation of the log-likelihood of each cfDNA sequencing read:
+## Cancer detection
 
-$$
-\begin{align*}
-\max_{\Theta}\log P_{\Omega}(\mathbf{R} | \Theta)=\sum_{i=1}^N\log P_{\Omega}({\sf read}_i | \Theta) 
-\end{align*}
-$$
-Since we have $T$ parameters $\theta_1,\theta_2,\cdots,\theta_T$ in this formulation, we cannot use the grid searching for each parameter as it is overly time consuming. Instead, we could employ the Expectation-Maximization (EM) clustering algorithm to solve this problem, where each tissue type could be regarded as a cluster with unknown prior probability $\theta_t$ and each read regarded as an object to be clustered. The EM clustering algorithm typically introduced a missing value or latent random variable $z_i$ for each ${\sf read}_i$ to indicate which tissue type $t$ this read originated from, i.e., $z_i=t$ and $z_i=1,2,\cdots,T$. This latent variable $z_i$ allows the categorical distribution ${\sf Cat}(T,\theta)$, therefore we have $P(z_i=t│\Theta)=\theta_t$. We rewrote $P_\Omega({\sf read}_i│\Theta)$ in the above equation as:
+The goal of this method is to detect tumor-derived cfDNA. Given a set of tumor-specific methylation markers, we take all cfDNA fragments reads mapped to marker regions and calculate the probability of each read derived from tumor or normal tissues based on the joint-methylation-states of CpG sites on the fragment. The methylation states of all CpG sites covered by the fragment are represented by a sequence of binary values (0 represents unmethylated CpG and 1 represents methylated CpG). The likelihood of each fragment derived from tumor or normal class can be used to estimate the tumor-derived cfDNA fraction $\theta$ ($0\leq \theta < 1$).
 
-$$
-\begin{align*}
-	P_{\Omega} \left({\sf read}_i│\Theta \right) &= \sum_{t=1}^T P_\Omega \left({\sf read}_i=t│\Theta \right) \\
-	&= \sum_{t=1}^T P\left(z_i=t|\Theta \right) P_\Omega \left({\sf read}_i│z_i=t \right) \\
-  &= \sum_{t=1}^T \theta_t P\left({\sf read}_i │ \Omega^t_{\sf marker({\sf read}_i)}\right)
-\end{align*}
-$$
-where $P\left({\sf read}_i│\Omega^t_{{\sf marker(}{\sf read}_i)}\right)$ is the tissue-of-origin likelihood of the cfDNA ${\sf read}_i$ for tissue $t$, and $\Omega^t_{{\sf marker}({\sf read}_i)}$ is the methylation signature of tissue $t$ in the marker’s region that ${\sf read}_i$ is mapped to. Let $q(z_i=t)$ denote the posterior probability of $z_i=t$, i.e., $q(z_i=t)=P(z_i=t|{\sf read}_i,\Theta,\Omega)$. According to the EM algorithm, we deduced the following alternative steps:
+## Tissue deconvolution
 
-$$
-\begin{align*}
-  \text{E-step:}\qquad & q(z_i=t)=\frac{\theta_t P\left({\sf read}_i | \Omega^t_{{\sf marker}({\sf read}_i)} \right)} {\sum_{t=1}^T \theta_t P\left({\sf read}_i | \Omega^t_{{\sf marker}({\sf read}_i)} \right)} & \text{, for } t=1,\cdots,T \\
-  \text{M-step:}\qquad & \theta_t = \frac{\sum^N_{i=1}q(z_i=t)}{N} & \text{, for } t=1,\cdots,T \\
-\end{align*}
-$$
-
-According to the EM algorithm, starting with a random initial value $\theta$ and iteratively performing the above two equations, this objective function (i.e. the log-likelihood function) converged to a local maximum of the log-likelihood function. We repeated this EM algorithm with different random initialized values of $\theta$, and chose the solution with the maximum log-likelihood. In the E-step, the tissue-of-origin likelihood of a cfDNA ${\sf read}_i$ for tissue $t$ could be easily calculated as $P({\sf read}_i│\Omega)=\Omega^{m({\sf read}_i)} (1-Ω)^{u({\sf read}_i)}$, where $\Omega$ denotes $\Omega^t_{{\sf marker}({\sf read}_i)}$ and $m({\sf read}_i)$ and $u({\sf read}_i)$ are the numbers of methylated and unmethylated CpGs in ${\sf read}_i$, respectively.
+This method aims to infer $T$-tissue-type composition of a plasma cfDNA sample, which is denoted as a composition vector $\Theta=(\theta_1,\theta_2,\cdots,\theta_T)$ satisfying $0\leq \theta_i < 1$ and $\sum_{t=1}^{T}{\theta_t}=1$ and $\theta_t$ is the cfDNA fraction of tissue $t$ in the plasma. Given a set of $T$-tissue-type methylation signatures, we map all cfDNA sequencing fragments into the genomic regions of these methylation signatures and calculate the tissue-of-origin likelihood of each cfDNA fragment for tissue $t$. The methylation states of all CpG sites at individual fragment level could also be represented by a sequence of binary values (0 represents unmethylated CpG and 1 represents methylated CpG).
 
 
 # Installation
@@ -94,76 +70,168 @@ Alternatively, you can install the development version from [GitHub](https://git
 BiocManager::install("jasminezhoulab/cfTools")
 ```
 
-# cfDNA sequencing read deconvolution
+# Input data preparation
 
-Example input files are included within the package:
+Example input data files are included within the package:
 ```{r demo}
 library(cfTools)
 demo.dir <- system.file("extdata", package="cfTools")
 ```
 
-## Input 1: the cfDNA methylation sequencing reads file
+## Collapse paired-end sequencing reads to fragment-level
 
-Each line is a read. All columns are delimited by TAB. There is one header line.
-We used three column to represent each read's information as below:
+Function `CollapsePEReads()` generates fragment-level information for paired-end sequencing reads. The main input file is a standard (sorted) BED file (e.g. output of *bedtools bamtobed*) of paired-end sequencing reads containing columns of chromosome name, chromosome start, chromosome end, sequence ID, score, and strand. 
 
-- Column 1: marker_index, an integer number that is a marker index.
-- Column 2: number of methylated CpG of the read that is mapped to this marker's genomic region.
-- Column 3: number of unmethylated CpG of the read that is mapped to this marker's genomic region.
-
-For example:
 ```{r}
-readsBinningFile <- file.path(demo.dir, "ReadDeconvolution.reads.txt")
-readsBinning <- read.table(readsBinningFile, header=TRUE)
-head(readsBinning)
+PEReads <- file.path(demo.dir, "demo.sorted.bed.gz")
+head(read.table(PEReads, header=FALSE), 2)
 ```
 
-## Input 2: the markers file
+The output is a data frame in BED file format and/or written to an output BED file, where each line contains the information of a cfDNA fragment.
 
-Each line is a marker including its genomic region and methylation pattern (two shape parameters of the beta distribution, which are delimited by `:`). All columns are delimited by TAB. There is one header line.
-
-- Column 1: marker_index
-- Column 2+: paired values (shape parameters of the beta distribution) for this marker (each column is a class). Each pair contains two values, delimited by `:`. If you cannot estimate shape parameters of the beta distribution, you may also use a single value, which is the average methylation level of this marker across all samples in the same tissue type.
-
-For example:
 ```{r}
-tissueMarkersFile <- file.path(demo.dir, "ReadDeconvolution.markers.txt")
-tissueMarkers <- read.table(tissueMarkersFile, header=TRUE)
-head(tissueMarkers)
+fragInfo <- CollapsePEReads(PEReads)
+head(fragInfo, 2)
 ```
 
-## Other inputs: 
+## Collapse methylation states of CpGs on two strands to fragment-level
 
-- **Output type**: options are `tissueFraction` (default), `tissueFraction+readCountRaw`, `tissueFraction+readCountPerMillion`, `tissueFraction+readCountPerBillion`
-- **Output file name**: the output will be written to this file.
+Function `CollapseCpGs()` generates fragment-level methylation states of CpGs. The main inputs of it are two output files of *bismark methylation extractor*, which is a program performing methylation calling on bisulfite treated sequencing reads. The `CpG_OT*` file contains methylation information for CpGs on the original top strand (OT); the `CpG_OB*` file contains methylation information for CpGs on the original bottom strand (OB). Both files contain columns of sequence ID, methylation state, chromosome name, chromosome start (=chromosome end), methylation call.
+
+```{r}
+CpG_OT <- file.path(demo.dir, "CpG_OT_demo.txt.gz")
+CpG_OB <- file.path(demo.dir, "CpG_OB_demo.txt.gz")
+head(read.table(CpG_OT, header=FALSE), 2)
+head(read.table(CpG_OB, header=FALSE), 2)
+```
+The output is a data frame in BED file format and/or written to an output BED file, where each line contains methylation states of all CpGs on the same fragment. Column *methState* is a sequence of binary values indicating the methylation states of all CpGs on the same fragment (0 represents unmethylated CpG and 1 represents methylated CpG).
+
+```{r}
+methInfo <- CollapseCpGs(CpG_OT, CpG_OB)
+head(methInfo, 2)
+```
+
+## Generate fragment-level information about methylation states
+
+Function `GenerateFragMeth()` combines the output data frame of `CollapsePEReads()` and `CollapseCpGs()` into one data frame, which contains both the fragment information and the methylation states of all CpGs on each fragment. 
+
+```{r}
+fragMeth <- GenerateFragMeth(fragInfo, methInfo)
+head(fragMeth, 2)
+```
+
+## Generate the methylation pattern of markers
+
+Function `GenerateMarkerParam()` calculates paired shape parameters of beta distributions for each marker. There are three main inputs to this function: (1) a data frame of methylation levels (e.g., beta values), where each row is a sample and each column is a marker; (2) a vector of sample types (e.g., tumor or normal, tissue types) corresponding to the rows of the data frame; (3) a vector of marker names corresponding to the columns of the data frame.
+
+```{r}
+methLevel <- read.csv(file.path(demo.dir, "beta_matrix.csv"), row.names=1)
+sampleTypes <- read.csv(file.path(demo.dir, "sample_type.csv"), row.names=1)$Sample.Type
+markerNames <- read.csv(file.path(demo.dir, "marker_index.csv"), row.names=1)$Marker.Index
+print(methLevel)
+print(sampleTypes)
+print(markerNames)
+```
+
+The output is a data frame containing the paired shape parameters of beta distributions for markers, which are delimited by `:`. Users can save this data frame into a file with column names, no row names, and columns are delimited by TAB for later use.
+
+```{r}
+markerParam <- GenerateMarkerParam(methLevel, sampleTypes, markerNames)
+print(markerParam)
+```
+# Fragments intersecting with marker regions
+
+To make the computation more efficient, users may first only keep the fragments that overlap with the genomic regions of markers. Here, we provide an example of using `R` package `r Biocpkg("GenomicRanges")` to perform the intersection. 
+
+First, transforming the two BED files into GRanges classes.
+
+```{r message=FALSE}
+library(GenomicRanges)
+demo.dir <- system.file("extdata", package="cfTools")
+
+# a BED file of fragment-level methylation information
+frag_bed <- read.csv(file.path(demo.dir, "demo.fragment_level.meth.bed"), 
+                     header=TRUE, sep="\t")
+frag_meth.gr <- GRanges(seqnames=frag_bed$chr, 
+                     ranges=IRanges(frag_bed$start, frag_bed$end),
+                     strand=frag_bed$strand,
+                     methState=as.character(frag_bed$methState))
+
+# a BED file of genomic regions of markers
+markers_bed <- read.csv(file.path(demo.dir, "markers.bed"), 
+                        header=TRUE, sep="\t")
+markers.gr <- GRanges(seqnames=markers_bed$chr, 
+                      ranges=IRanges(markers_bed$start, markers_bed$end),
+                      markerName=markers_bed$markerName)
+
+head(frag_meth.gr, 2)
+head(markers.gr, 2)
+```
+
+Then, overlap two GRanges classes and get the fragment-level methylation states intersecting with the markers.
+
+```{r}
+ranges <- subsetByOverlaps(frag_meth.gr, markers.gr, ignore.strand=TRUE)
+hits <- findOverlaps(frag_meth.gr, markers.gr,ignore.strand=TRUE)
+idx <- subjectHits(hits)
+
+values <- DataFrame(markerName=markers.gr$markerName[idx])
+mcols(ranges) <- c(mcols(ranges), values)
+
+marker.methState <- as.data.frame(cbind(ranges$markerName, ranges$methState))
+colnames(marker.methState) <- c("markerName", "methState")
+head(marker.methState, 4)
+```
+
+Alternatively, users may use other softwares like *bedtools intersect* to intersect the BED file of fragment-level information about methylation states generated by `GenerateFragMeth()` with a BED file of genomic regions of markers.
+
+# Cancer detection 
+
+Function `CancerDetector()` separates cfDNA into tumor-derived fragments and background normal fragments and estimates the tumor burden. The main inputs are two files: (1) the fragment-level methylation states of reads (column `methState`) that mapped to the cancer-specific markers; (2) paired shape parameters of beta distributions for cancer-specific markers. All columns are delimited by TAB, and the first line is the column names.
+
+```{r}
+fragMethFile <- file.path(demo.dir, "CancerDetector.reads.txt")
+markerParamFile <- file.path(demo.dir, "CancerDetector.markers.txt")
+head(read.csv(fragMethFile, sep = "\t", colClasses = "character"), 4)
+head(read.csv(markerParamFile, sep = "\t"), 4)
+```
+
+The output is the estimated tumor burden $\theta$ and the normal cfDNA fraction $1-\theta$.
+
+```{r}
+CancerDetector(fragMethFile, markerParamFile)
+```
+
+# Tissue deconvolution
+
+Function `cfDeconvolve()` estimates fractions of cfDNA fragments from different tissues (> 2 classes). The main two input files are similar to function `CancerDetector()`: (1) the fragment-level methylation states of reads (column `methState`) that mapped to the tissue-specific markers; (2) paired shape parameters of beta distributions for tissue-specific markers. All columns are delimited by TAB, and the first line is the column names.
+
+```{r}
+fragMethFile2 <- file.path(demo.dir, "cfDeconvolve.reads.txt")
+markerParamFile2 <- file.path(demo.dir, "cfDeconvolve.markers.txt")
+head(read.csv(fragMethFile2, header=TRUE, sep="\t", colClasses = "character"), 4)
+head(read.csv(markerParamFile2, header=TRUE, sep="\t", colClasses = "character"), 4)
+```
+Other input parameters are:
+
 - **Number of tissue types**: a positive integer number *k*. Reads will be classified into *k* different tissue types.
 - **Read-based tissue deconvolution EM algorithm type**: options are `em.global.unknown` (default), `em.global.known`, `em.local.unknown`, `em.local.known`.
 - **Likelihood ratio threshold**: a positive float number. We suggest this number is 2 (default). All reads with likelihood ratio < cutoff (default: -1.0, meanin no reads filtering is used) will not be used. Likelihood ratio is the max(all tissues' likelihoods)/min(all tissues' likelihoods).
 - **EM algorithm maximum iteration number**: a positive integer number. Default is 100.
 
-
 For example:
 ```{r}
-outputType <- "tissueFraction+readCountPerBillion"
-outputFile <- file.path(demo.dir, "example.profile")
 numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
 likelihoodRatioThreshold <- 2
 emMaxIterations <- 100
 ```
 
-## Output: the normalized tissue-specific read counts in each marker
-
-The first three lines are header lines, indicating the column names and the global fraction of tissue types and other information. Starting from the 4-th line, each line corresponds to a marker, consisting of the tissue-specific read counts of this marker.
-
-- Column 1: marker index
-- Column 2+: read count of each tissue type in the marker, and the read count of the unknown class is listed in the last column of each line
+The output is a data frame containing the cfDNA fractions of different tissue types and an unknown class.
 
 ```{r, message=TRUE}
-cfSort(readsBinningFile, tissueMarkersFile, outputType, outputFile, numTissues, emAlgorithmType, likelihoodRatioThreshold, emMaxIterations)
-
-output <- read.table(outputFile, header=TRUE)
-head(output)
+tissueFraction <- cfDeconvolve(fragMethFile2, markerParamFile2, numTissues, emAlgorithmType, likelihoodRatioThreshold, emMaxIterations)
+tissueFraction
 ```
 
 

@@ -1,8 +1,8 @@
 #' @title
-#' Generate methylation status of CpGs on the same read
+#' Generate fragment-level methylation states of CpGs
 #'
 #' @description
-#' Collapse all CpGs corresponding to the same read onto one line in output.
+#' Collapse the methylation states of all CpGs corresponding to the same fragment onto one line in output.
 #'
 #' @param CpG_OT a file of methylation information for CpG on the original top strand (OT), 
 #' which is one of the outputs from `bismark methylation extractor`.
@@ -49,7 +49,7 @@ CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="", python="python") 
   # output_bed$V7 <- format(output_bed$V7, scientific=F)
   # output_bed[ , nums] <- as.data.frame(apply(output_bed[ , nums], 2, as.character))
   rownames(output_bed) <- NULL
-  colnames(output_bed) <- c("chr", "cpgStart", "cpgEnd", "strand", "cpgNumber", "cpgPosition", "methStatus", "name")
+  colnames(output_bed) <- c("chr", "cpgStart", "cpgEnd", "strand", "cpgNumber", "cpgPosition", "methState", "name")
   
   write.table(output_bed, refo_meth, sep="\t", row.names=FALSE, quote = FALSE)
   if (output.dir=="" | id=="") {

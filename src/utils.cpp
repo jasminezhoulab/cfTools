@@ -851,9 +851,9 @@ unsigned long calc_read_probability_by_marker2beta_from_reads_binning_text_file(
 			// this is the last line of the file
 			break;
 		}
-		if ( totalReadCount%print_control==0) {
-		  Rcpp::Rcerr << totalReadCount << ",";
-		}
+		// if ( totalReadCount%print_control==0) {
+		//   Rcpp::Rcerr << totalReadCount << ",";
+		// }
 		totalReadCount++;
 		int marker_index;
 

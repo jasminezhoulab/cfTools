@@ -1,9 +1,9 @@
 #' @title
-#' Generate fragment level information for paired-end reads
+#' Generate fragment-level information for paired-end sequencing reads
 #'
 #' @description
 #' Collapse BED file (the output of `bedtools bamtobed`) to 
-#' fragment level for paired-end reads.
+#' fragment-level for paired-end sequencing reads.
 #'
 #' @param bed_file a (sorted) BED file of paired-end reads.
 #' @param output.dir a path to the output directory. Default is "", which means the output will not be written into a file.
@@ -15,9 +15,9 @@
 #' @examples
 #' ## input files
 #' demo.dir <- system.file("extdata", package="cfTools")
-#' bed_file <- file.path(demo.dir, "demo.sorted.bed.gz")
+#' PEReads <- file.path(demo.dir, "demo.sorted.bed.gz")
 #'
-#' output <- CollapsePEReads(bed_file)
+#' output <- CollapsePEReads(PEReads)
 #'
 #' @export
 CollapsePEReads <- function(bed_file, output.dir="", id="", python="python") {

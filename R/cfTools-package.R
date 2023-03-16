@@ -12,3 +12,5 @@ NULL
 NULL
 #' @importFrom utils read.delim
 NULL
+#' @import GenomicRanges
+NULL

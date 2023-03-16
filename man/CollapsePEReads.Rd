@@ -2,7 +2,7 @@
 % Please edit documentation in R/CollapsePEReads.R
 \name{CollapsePEReads}
 \alias{CollapsePEReads}
-\title{Generate fragment level information for paired-end reads}
+\title{Generate fragment-level information for paired-end sequencing reads}
 \usage{
 CollapsePEReads(bed_file, output.dir = "", id = "", python = "python")
 }
@@ -20,13 +20,13 @@ a data frame in BED file format and/or written to an output BED file.
 }
 \description{
 Collapse BED file (the output of `bedtools bamtobed`) to 
-fragment level for paired-end reads.
+fragment-level for paired-end sequencing reads.
 }
 \examples{
 ## input files
 demo.dir <- system.file("extdata", package="cfTools")
-bed_file <- file.path(demo.dir, "demo.sorted.bed.gz")
+PEReads <- file.path(demo.dir, "demo.sorted.bed.gz")
 
-output <- CollapsePEReads(bed_file)
+output <- CollapsePEReads(PEReads)
 
 }

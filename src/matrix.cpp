@@ -323,7 +323,7 @@ void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matri
 	//cerr << "iter 0\t" << objective_em_supervise(p, theta) << endl;
 	double v1, v2;
 	for (int iter=0; iter<max_iter; iter++) {
-	  Rcpp::Rcerr << iter+1 << "," ;
+	  // Rcpp::Rcerr << iter+1 << "," ;
 		// E-step: estimate q
 		for (int i=0; i<nrow; i++) {
 			double sum = 0;
