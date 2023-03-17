@@ -23,14 +23,21 @@
 CollapsePEReads <- function(bed_file, output.dir="", id="", python="python") {
   
   python.script.dir <- system.file("python", package = "cfTools", mustWork = TRUE)
+  hasOutput <- TRUE
   
   if (output.dir=="" | id=="") {
+    hasOutput <- FALSE
     extdata.dir <- system.file("extdata", package = "cfTools", mustWork = TRUE)
-    output.dir <- paste0(extdata.dir, "/tmp/")
-    if (system.file("extdata/tmp", package = "cfTools") == "") {
-      system2(command = "mkdir", args = output.dir)
-    }
-    id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
+    output.dir <- extdata.dir
+    
+    timeNow <- strsplit(strsplit(as.character(Sys.time()), " ")[[1]][2], ":")[[1]]
+    id <- paste0(timeNow[1], timeNow[2], timeNow[3])
+    
+    # output.dir <- paste0(extdata.dir, "/tmp/")
+    # if (system.file("extdata/tmp", package = "cfTools") == "") {
+    #   system2(command = "mkdir", args = output.dir)
+    # }
+    # id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
   }
   
   py1 <- paste0(python.script.dir, "/collapse_bed_file_strand_correct.py")
@@ -44,8 +51,9 @@ CollapsePEReads <- function(bed_file, output.dir="", id="", python="python") {
   colnames(output_bed) <- c("chr", "start", "end", "fragmentLength", "strand", "name")
   
   write.table(output_bed, refo_frag, sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
-  if (output.dir=="" | id=="") {
-    system2(command = "rm", args = refo_frag)
+  if (!hasOutput) {
+    # system2(command = "rm", args = refo_frag)
+    file.remove(refo_frag)
   }
   
   return(output_bed)

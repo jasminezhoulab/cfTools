@@ -28,14 +28,21 @@ CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="", python="python") 
   # options(scipen = 999)
   
   python.script.dir <- system.file("python", package = "cfTools", mustWork = TRUE)
+  hasOutput <- TRUE
   
   if (output.dir=="" | id=="") {
+    hasOutput <- FALSE
     extdata.dir <- system.file("extdata", package = "cfTools", mustWork = TRUE)
-    output.dir <- paste0(extdata.dir, "/tmp/")
-    if (system.file("extdata/tmp", package = "cfTools") == "") {
-      system2(command = "mkdir", args = output.dir)
-    }
-    id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
+    output.dir <- extdata.dir
+    
+    timeNow <- strsplit(strsplit(as.character(Sys.time()), " ")[[1]][2], ":")[[1]]
+    id <- paste0(timeNow[1], timeNow[2], timeNow[3])
+    
+    # output.dir <- paste0(extdata.dir, "/tmp/")
+    # if (system.file("extdata/tmp", package = "cfTools") == "") {
+    #   system2(command = "mkdir", args = output.dir)
+    # }
+    # id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
   }
   
   py2 <- paste0(python.script.dir, "/collapse_CpG.py")
@@ -52,8 +59,8 @@ CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="", python="python") 
   colnames(output_bed) <- c("chr", "cpgStart", "cpgEnd", "strand", "cpgNumber", "cpgPosition", "methState", "name")
   
   write.table(output_bed, refo_meth, sep="\t", row.names=FALSE, quote = FALSE)
-  if (output.dir=="" | id=="") {
-    system2(command = "rm", args = refo_meth)
+  if (!hasOutput) {
+    file.remove(refo_meth)
   }
   
   return(output_bed)

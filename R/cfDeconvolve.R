@@ -37,17 +37,22 @@ cfDeconvolve <- function(readsBinningFile, tissueMarkersFile, numTissues,
                    emAlgorithmType="em.global.unknown", likelihoodRatioThreshold=2, emMaxIterations=100) {
 
   extdata.dir <- system.file("extdata", package = "cfTools", mustWork = TRUE)
-  output.dir <- paste0(extdata.dir, "/tmp/")
-  if (system.file("extdata/tmp", package = "cfTools") == "") {
-    system2(command = "mkdir", args = output.dir)
-  }
-  id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
+  output.dir <- extdata.dir
+  
+  timeNow <- strsplit(strsplit(as.character(Sys.time()), " ")[[1]][2], ":")[[1]]
+  id <- paste0(timeNow[1], timeNow[2], timeNow[3])
+  
+  # output.dir <- paste0(extdata.dir, "/tmp/")
+  # if (system.file("extdata/tmp", package = "cfTools") == "") {
+  #   system2(command = "mkdir", args = output.dir)
+  # }
+  # id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
   
   readsBinningFile.count <- file.path(output.dir, paste0(id, ".reads_count.txt"))
   readsBinning <- read.csv(readsBinningFile, header=TRUE, sep="\t", colClasses = "character")
   colnames(readsBinning) <- c("markerName", "methState")
   meth_unmeth_count <- lapply(readsBinning$methState, count_meth_unmeth)
-  readsBinningFile.input <- cbind(readsBinning$markerName, data.frame(t(sapply(meth_unmeth_count, c))))
+  readsBinningFile.input <- cbind(readsBinning$markerName, data.frame(t(vapply(meth_unmeth_count, c, numeric(2)))))
   colnames(readsBinningFile.input) <- c("marker_index", "meth_count", "unmeth_count")
   write.table(readsBinningFile.input, readsBinningFile.count, sep="\t", row.names=FALSE, quote=FALSE)
   
@@ -57,8 +62,11 @@ cfDeconvolve <- function(readsBinningFile, tissueMarkersFile, numTissues,
                          emAlgorithmType, outputFile, "tissueFraction", emMaxIterations)
 
   output <- read.csv(outputFile, header=TRUE, sep="\t")
-  system2(command = "rm", args = outputFile)
-  system2(command = "rm", args = readsBinningFile.count)
+  # system2(command = "rm", args = outputFile)
+  # system2(command = "rm", args = readsBinningFile.count)
+  
+  file.remove(outputFile)
+  file.remove(readsBinningFile.count)
   
   return(output)
   

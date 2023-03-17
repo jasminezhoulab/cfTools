@@ -24,14 +24,20 @@
 GenerateFragMeth <- function(frag_bed, meth_bed, output.dir="", id="", python="python") {
   
   python.script.dir <- system.file("python", package = "cfTools", mustWork = TRUE)
+  hasOutput <- TRUE
   
   if (output.dir=="" | id=="") {
+    hasOutput <- FALSE
     extdata.dir <- system.file("extdata", package = "cfTools", mustWork = TRUE)
-    output.dir <- paste0(extdata.dir, "/tmp/")
-    if (system.file("extdata/tmp", package = "cfTools") == "") {
-      system2(command = "mkdir", args = output.dir)
-    }
-    id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
+    output.dir <- extdata.dir
+    
+    timeNow <- strsplit(strsplit(as.character(Sys.time()), " ")[[1]][2], ":")[[1]]
+    id <- paste0(timeNow[1], timeNow[2], timeNow[3])
+    
+    # output.dir <- paste0(extdata.dir, "/tmp")
+    # if (system.file("extdata/tmp", package = "cfTools") == "") {
+    #   system2(command = "mkdir", args = output.dir)
+    # }
   }
   
   fragment_level.meth <- file.path(output.dir, paste0(id, ".fragment_level.meth.bed"))
@@ -43,12 +49,13 @@ GenerateFragMeth <- function(frag_bed, meth_bed, output.dir="", id="", python="p
   colnames(output_bed) <- c("chr", "start", "end", "name", "fragmentLength", "strand", 
                             "cpgNumber", "cpgPosition", "methState")
   
-  output_bed <- output_bed[with(output_bed, order(chr, start)), ]
+  output_bed <- output_bed[with(output_bed, order(chr, start)), ] #sort by chr and start
   rownames(output_bed) <- NULL
   
   write.table(output_bed, fragment_level.meth, sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
-  if (output.dir=="" | id=="") {
-    system2(command = "rm", args = fragment_level.meth)
+  if (!hasOutput) {
+    # system2(command = "rm", args = fragment_level.meth)
+    file.remove(fragment_level.meth)
   }
   
   return(output_bed)
