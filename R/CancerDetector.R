@@ -6,7 +6,7 @@
 #'
 #' @param readsBinningFile a file of the fragment-level methylation states of reads that mapped to the markers.
 #' @param tissueMarkersFile a file of paired shape parameters of beta distributions for markers.
-#' @param python a path to Python 3. Default is "python".
+#' @param python a path to Python 3. Default is "python3".
 #'
 #' @return cfDNA tumor burden and normal cfDNA fraction.
 #'
@@ -19,7 +19,7 @@
 #' CancerDetector(readsBinningFile, tissueMarkersFile)
 #'
 #' @export
-CancerDetector <- function(readsBinningFile, tissueMarkersFile, python="python") {
+CancerDetector <- function(readsBinningFile, tissueMarkersFile, python="python3") {
 
   lambda = 0.5 # a predefined lambda
   

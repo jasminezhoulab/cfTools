@@ -4,7 +4,7 @@
 \alias{CollapsePEReads}
 \title{Generate fragment-level information for paired-end sequencing reads}
 \usage{
-CollapsePEReads(bed_file, output.dir = "", id = "", python = "python")
+CollapsePEReads(bed_file, output.dir = "", id = "", python = "python3")
 }
 \arguments{
 \item{bed_file}{a (sorted) BED file of paired-end reads.}
@@ -13,7 +13,7 @@ CollapsePEReads(bed_file, output.dir = "", id = "", python = "python")
 
 \item{id}{an ID name for the input data. Default is "", which means the output will not be written into a file.}
 
-\item{python}{a path to Python 3. Default is "python".}
+\item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
 a data frame in BED file format and/or written to an output BED file.

@@ -9,7 +9,7 @@ GenerateFragMeth(
   meth_bed,
   output.dir = "",
   id = "",
-  python = "python"
+  python = "python3"
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ GenerateFragMeth(
 
 \item{id}{an ID name for the input data. Default is "", which means the output will not be written into a file.}
 
-\item{python}{a path to Python 3. Default is "python".}
+\item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
 a data frame in BED file format and/or written to an output BED file.

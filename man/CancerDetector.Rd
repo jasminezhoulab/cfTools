@@ -4,14 +4,14 @@
 \alias{CancerDetector}
 \title{Cancer Detector}
 \usage{
-CancerDetector(readsBinningFile, tissueMarkersFile, python = "python")
+CancerDetector(readsBinningFile, tissueMarkersFile, python = "python3")
 }
 \arguments{
 \item{readsBinningFile}{a file of the fragment-level methylation states of reads that mapped to the markers.}
 
 \item{tissueMarkersFile}{a file of paired shape parameters of beta distributions for markers.}
 
-\item{python}{a path to Python 3. Default is "python".}
+\item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
 cfDNA tumor burden and normal cfDNA fraction.
