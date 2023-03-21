@@ -41,7 +41,7 @@ CancerDetector <- function(readsBinningFile, tissueMarkersFile, python="python3"
   py1.command <- paste(py1, readsBinningFile, tissueMarkersFile, output.dir, id)
   system2(command = python, args = py1.command)
 
-  id.likelihood = file.path(output.dir, paste0(id, ".likelihood.txt"))
+  id.likelihood <- file.path(output.dir, paste0(id, ".likelihood.txt"))
   tumor.burden <- file.path(output.dir, paste0(id, ".tumor_burden.txt"))
   
   py2 <- paste0(python.script.dir, "/CancerDetector.py")

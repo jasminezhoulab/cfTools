@@ -4,27 +4,33 @@ author:
   - name: Ran Hu
     affiliation:
       - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
-      - Institute for Quantitative & Computational Biosciences, University of California at Los Angeles
+      - Institute for Quantitative and Computational Biosciences, University of California at Los Angeles
       - Bioinformatics Interdepartmental Graduate Program, University of California at Los Angeles
     email: huran@ucla.edu
-  - name: Wenyuan Li
+  - name: Mary L. Stackpole
+    affiliation:
+      - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
+  - name: Shuo Li
     affiliation:
       - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
   - name: Xianghong Jasmine Zhou
     affiliation:
       - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
-      - Institute for Quantitative & Computational Biosciences, University of California at Los Angeles
+      - Institute for Quantitative and Computational Biosciences, University of California at Los Angeles
+  - name: Wenyuan Li
+    affiliation:
+      - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
 package: cfTools
 output: 
   BiocStyle::html_document:
     toc_float: true
   BiocStyle::pdf_document: default
 abstract: >
-  Cell-free DNA (cfDNA) in blood has emerged as an ideal surrogate for tumor biopsy. It can be obtained noninvasively, and provides a comprehensive landscape of the heterogeneous genetic and epigenetic alterations in tumors. The `r Biocpkg("cfTools")` package provides methods for cfDNA methylation data analysis to facilitate cfDNA-based cancer studies, including (1) cancer detection: sensitively detect tumor-derived cfDNA to determine whether a sample is from a cancer or normal patient; (2) tissue deconvolution: infer the tissue type composition of a plasma cfDNA sample. Note that this vignette is modularized and exmaple datasets used in different modules may not be relevant.
+  Cell-free DNA (cfDNA) in blood has emerged as an ideal surrogate for tumor biopsy. It can be obtained noninvasively, and provides a comprehensive landscape of the heterogeneous genetic and epigenetic alterations in tumors. The `r Biocpkg("cfTools")` package provides methods for cfDNA methylation data analysis to facilitate cfDNA-based studies, including (1) cancer detection: sensitively detect tumor-derived cfDNA and estimate the tumor-derived cfDNA fraction (tumor burden); (2) tissue deconvolution: infer the tissue type composition and the cfDNA fraction of multiple tissue types for a plasma cfDNA sample.
 vignette: >
   %\VignetteIndexEntry{cfTools-vignette}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -36,22 +42,15 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-Given the methylation sequencing data of a patient's cell-free DNA (cfDNA) sample, for each cancer marker or tissue marker, we deconvolve the tumor-derived or tissue-specific reads from all reads falling in the marker region. Our read-based deconvolution algorithm exploits the pervasiveness of DNA methylation for signal enhancement, therefore can sensitively identify a trace amount of tumor-specific or tissue-specific cfDNA in plasma. 
+Given the methylation sequencing data of a cell-free DNA (cfDNA) sample, for each cancer marker or tissue marker, we deconvolve the tumor-derived or tissue-specific reads from all reads falling in the marker region. Our read-based deconvolution algorithm exploits the pervasiveness of DNA methylation for signal enhancement, therefore can sensitively identify a trace amount of tumor-specific or tissue-specific cfDNA in plasma. 
 
-`r Biocpkg("cfTools")` can deconvolve different sources of cfDNA fragments (or reads) in two contexts:
+Specifically, `r Biocpkg("cfTools")` can deconvolve different sources of cfDNA fragments (or reads) in two contexts:
 
-1. Cancer detection [1]: separating cfDNA fragments into tumor-derived fragments and background normal fragments (2 classes).
+1. Cancer detection [1]: separate cfDNA fragments into tumor-derived fragments and background normal fragments (2 classes), and estimate the tumor-derived cfDNA fraction $\theta$ ($0\leq \theta < 1$).
 
-2. Tissue deconvolution [2]: separating cfDNA fragments from different tissues (> 2 classes). 
+2. Tissue deconvolution [2]: separate cfDNA fragments from different tissues (> 2 classes), and estimate the cfDNA fraction $\theta_t$ ($0\leq \theta_t < 1$) of different tissue types (including an unknown type) $t$ for a plasma cfDNA sample.
 
-## Cancer detection
-
-The goal of this method is to detect tumor-derived cfDNA. Given a set of tumor-specific methylation markers, we take all cfDNA fragments reads mapped to marker regions and calculate the probability of each read derived from tumor or normal tissues based on the joint-methylation-states of CpG sites on the fragment. The methylation states of all CpG sites covered by the fragment are represented by a sequence of binary values (0 represents unmethylated CpG and 1 represents methylated CpG). The likelihood of each fragment derived from tumor or normal class can be used to estimate the tumor-derived cfDNA fraction $\theta$ ($0\leq \theta < 1$).
-
-## Tissue deconvolution
-
-This method aims to infer $T$-tissue-type composition of a plasma cfDNA sample, which is denoted as a composition vector $\Theta=(\theta_1,\theta_2,\cdots,\theta_T)$ satisfying $0\leq \theta_i < 1$ and $\sum_{t=1}^{T}{\theta_t}=1$ and $\theta_t$ is the cfDNA fraction of tissue $t$ in the plasma. Given a set of $T$-tissue-type methylation signatures, we map all cfDNA sequencing fragments into the genomic regions of these methylation signatures and calculate the tissue-of-origin likelihood of each cfDNA fragment for tissue $t$. The methylation states of all CpG sites at individual fragment level could also be represented by a sequence of binary values (0 represents unmethylated CpG and 1 represents methylated CpG).
-
+These functions can serve as foundations for more advanced cfDNA-based studies, including cancer diagnosis and disease monitoring.
 
 # Installation
 
@@ -72,15 +71,40 @@ BiocManager::install("jasminezhoulab/cfTools")
 
 # Input data preparation
 
+The two main input files for `CancerDetector()` and `cfDeconvolve()` are
+
+* **Input 1**: fragment-level methylation states (methState), which are represented by a sequence of binary values (0 represents unmethylated CpG and 1 represents methylated CpG on the same fragment);
+
+* **Input 2**: methylation pattern (paired shape parameters of beta distributions) of markers. 
+
+Section 3.1, 3.2, 3.3 provide an example for generating **Input 1**. We require users to provide pre-processed paired-end bisulfite sequencing reads (i.e., aligned to the reference genome). For each cfDNA sample, users need to prepare (1) the standard (sorted) BED file of the aligned reads and (2) the methylation information that *bismark* extracts from the aligned reads as input data files. Specifically, 
+
+* Section 3.1 `CollapsePEReads()`
+  * Input: a standard (sorted) BED file of paired-end sequencing reads
+  * Output: fragment-level information of cfDNA reads
+* Section 3.2 `CollapseCpGs()`
+  * Input: a `CpG_OT*` file and a `CpG_OB*` file generated by *bismark methylation extractor*
+  * Output: methylation information of all CpGs on the same fragment
+* Section 3.3 `GenerateFragMeth()`
+  * Input: the output data frames of `CollapsePEReads()` and `CollapseCpGs()`
+  * Output: fragment-level information about methylation states
+  
+Section 3.4 provides an example for generating **Input 2**. Specifically,
+
+* Section 3.4 `GenerateMarkerParam()`
+  * Input: a data frame of methylation levels (e.g., beta values) for markers, a vector of sample types (e.g., tumor or normal, tissue types) corresponding to the rows of the data frame, a vector of marker names corresponding to the columns of the data frame
+  * Output: a data frame containing the paired shape parameters of beta distributions for markers
+
 Example input data files are included within the package:
+
 ```{r demo}
 library(cfTools)
 demo.dir <- system.file("extdata", package="cfTools")
 ```
-
+ 
 ## Collapse paired-end sequencing reads to fragment-level
 
-Function `CollapsePEReads()` generates fragment-level information for paired-end sequencing reads. The main input file is a standard (sorted) BED file (e.g. output of *bedtools bamtobed*) of paired-end sequencing reads containing columns of chromosome name, chromosome start, chromosome end, sequence ID, score, and strand. 
+Function `CollapsePEReads()` generates fragment-level information for paired-end sequencing reads. The main input file is a standard (sorted) BED file (e.g. output of *bedtools bamtobed*) of paired-end sequencing reads containing columns of chromosome name, chromosome start, chromosome end, sequence ID, mapping quality score, and strand. 
 
 ```{r}
 PEReads <- file.path(demo.dir, "demo.sorted.bed.gz")
@@ -96,7 +120,7 @@ head(fragInfo, 2)
 
 ## Collapse methylation states of CpGs on two strands to fragment-level
 
-Function `CollapseCpGs()` generates fragment-level methylation states of CpGs. The main inputs of it are two output files of *bismark methylation extractor*, which is a program performing methylation calling on bisulfite treated sequencing reads. The `CpG_OT*` file contains methylation information for CpGs on the original top strand (OT); the `CpG_OB*` file contains methylation information for CpGs on the original bottom strand (OB). Both files contain columns of sequence ID, methylation state, chromosome name, chromosome start (=chromosome end), methylation call.
+Function `CollapseCpGs()` generates fragment-level methylation states of CpGs. The main inputs of it are two output files of *bismark methylation extractor*, which is a program performing methylation calling on bisulfite treated sequencing reads. The `CpG_OT*` file contains methylation information for CpGs on the original top strand (OT); the `CpG_OB*` file contains methylation information for CpGs on the original bottom strand (OB). Both files contain columns of sequence ID, methylation state, chromosome name, chromosome start, methylation call.
 
 ```{r}
 CpG_OT <- file.path(demo.dir, "CpG_OT_demo.txt.gz")
@@ -113,7 +137,7 @@ head(methInfo, 2)
 
 ## Generate fragment-level information about methylation states
 
-Function `GenerateFragMeth()` combines the output data frame of `CollapsePEReads()` and `CollapseCpGs()` into one data frame, which contains both the fragment information and the methylation states of all CpGs on each fragment. 
+Function `GenerateFragMeth()` combines the output data frames of `CollapsePEReads()` and `CollapseCpGs()` into one data frame, which contains both the fragment information and the methylation states of all CpGs on each fragment. 
 
 ```{r}
 fragMeth <- GenerateFragMeth(fragInfo, methInfo)
@@ -141,9 +165,9 @@ print(markerParam)
 ```
 # Fragments intersecting with marker regions
 
-To make the computation more efficient, users may first only keep the fragments that overlap with the genomic regions of markers. Here, we provide an example of using `R` package `r Biocpkg("GenomicRanges")` to perform the intersection. 
+To make the computation more efficient, users may only keep the fragments that overlap with the genomic regions of markers. Here, we provide an example of using `R` package `r Biocpkg("GenomicRanges")` to perform the intersection. 
 
-First, transforming the two BED files into GRanges classes.
+First, transform the two BED files into GRanges classes.
 
 ```{r message=FALSE}
 library(GenomicRanges)
@@ -183,8 +207,6 @@ colnames(marker.methState) <- c("markerName", "methState")
 head(marker.methState, 4)
 ```
 
-Alternatively, users may use other softwares like *bedtools intersect* to intersect the BED file of fragment-level information about methylation states generated by `GenerateFragMeth()` with a BED file of genomic regions of markers.
-
 # Cancer detection 
 
 Function `CancerDetector()` separates cfDNA into tumor-derived fragments and background normal fragments and estimates the tumor burden. The main inputs are two files: (1) the fragment-level methylation states of reads (column `methState`) that mapped to the cancer-specific markers; (2) paired shape parameters of beta distributions for cancer-specific markers. All columns are delimited by TAB, and the first line is the column names.
@@ -204,7 +226,7 @@ CancerDetector(fragMethFile, markerParamFile)
 
 # Tissue deconvolution
 
-Function `cfDeconvolve()` estimates fractions of cfDNA fragments from different tissues (> 2 classes). The main two input files are similar to function `CancerDetector()`: (1) the fragment-level methylation states of reads (column `methState`) that mapped to the tissue-specific markers; (2) paired shape parameters of beta distributions for tissue-specific markers. All columns are delimited by TAB, and the first line is the column names.
+Function `cfDeconvolve()` estimates fractions of cfDNA fragments from different tissues (> 2 classes). The main two input files are similar to function `CancerDetector()`: (1) the fragment-level methylation states of reads (column `methState`) that mapped to the tissue-specific markers; (2) paired shape parameters of beta distributions for tissue-specific markers. All columns are delimited by TAB, and there is a header line of the column names.
 
 ```{r}
 fragMethFile2 <- file.path(demo.dir, "cfDeconvolve.reads.txt")
