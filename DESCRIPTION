@@ -9,14 +9,28 @@ Authors@R: c(
         email = "huran@ucla.edu",
         comment = c(ORCID = "0000-0002-0563-8957")
     ),
-    person("Wenyuan", "Li", role = "aut"),
-    person(c("Xianghong", "Jasmine"), "Zhou", role = "aut")
-    )
-Description: cfTools is a versatile toolset of deconvoluting the cell-free DNA fragments 
-    (or sequencing reads) into multiple tissue types or tumor types. It can deconvolute 
-    the different sources of cfDNA sequencing reads in two contexts: (1) separating reads 
-    into tumor-derived reads and background reads; and (2) separating the reads from 
-    different tissues.
+    person(c("Mary Louisa", "Stackpole"), role = "aut"),
+    person("Shuo", "Li", role = "aut"),
+    person(c("Xianghong", "Jasmine"), "Zhou", 
+            role = "aut", 
+            email = "XJZhou@mednet.ucla.edu"),
+    person("Wenyuan", "Li", 
+            role = "aut",
+            email = "WenyuanLi@mednet.ucla.edu"))
+Description: The cfTools R package provides methods for cell-free DNA (cfDNA) 
+    methylation data analysis to facilitate cfDNA-based studies. Given the 
+    methylation sequencing data of a cfDNA sample, for each cancer marker 
+    or tissue marker, we deconvolve the tumor-derived or tissue-specific reads 
+    from all reads falling in the marker region. Our read-based deconvolution 
+    algorithm exploits the pervasiveness of DNA methylation for signal enhancement, 
+    therefore can sensitively identify a trace amount of tumor-specific or 
+    tissue-specific cfDNA in plasma. cfTools provides functions for 
+    (1) cancer detection: sensitively detect tumor-derived cfDNA and estimate 
+    the tumor-derived cfDNA fraction (tumor burden); (2) tissue deconvolution: 
+    infer the tissue type composition and the cfDNA fraction of multiple tissue 
+    types for a plasma cfDNA sample. These functions can serve as foundations 
+    for more advanced cfDNA-based studies, including cancer diagnosis and 
+    disease monitoring.
 License: file LICENSE
 Encoding: UTF-8
 Suggests:
@@ -31,8 +45,8 @@ Imports:
     utils,
     GenomicRanges
 StagedInstall: no
-SystemRequirements: Python, numpy, scipy
-biocViews: Software, Sequencing, DNAMethylation, DifferentialMethylation
+SystemRequirements: Python 3+, NumPy, SciPy
+biocViews: Software, BiomedicalInformatics, Epigenetics, Sequencing, MethylSeq, DNAMethylation, DifferentialMethylation
 VignetteBuilder: knitr
 LinkingTo: 
     Rcpp,

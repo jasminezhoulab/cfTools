@@ -7,7 +7,7 @@ author:
       - Institute for Quantitative and Computational Biosciences, University of California at Los Angeles
       - Bioinformatics Interdepartmental Graduate Program, University of California at Los Angeles
     email: huran@ucla.edu
-  - name: Mary L. Stackpole
+  - name: Mary Louisa Stackpole
     affiliation:
       - Department of Pathology and Laboratory Medicine, David Geffen School of Medicine, University of California at Los Angeles
   - name: Shuo Li
