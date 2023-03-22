@@ -9,7 +9,7 @@ Authors@R: c(
         email = "huran@ucla.edu",
         comment = c(ORCID = "0000-0002-0563-8957")
     ),
-    person(c("Mary Louisa", "Stackpole"), role = "aut"),
+    person(c("Mary", "Louisa"), "Stackpole", role = "aut"),
     person("Shuo", "Li", role = "aut"),
     person(c("Xianghong", "Jasmine"), "Zhou", 
             role = "aut", 
