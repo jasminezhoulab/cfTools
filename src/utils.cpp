@@ -1057,73 +1057,73 @@ unsigned long calc_read_probability_by_marker2beta_from_reads_binning_text_file(
 //Each line is a read. All columns are delimited by TAB. There is one header line.
 //Column 1: marker index (1-base)
 //Columns 2+: each column is a probability value of a specific tissue. For example, given 15 tissues, there will be 15 additional columns.
-void calc_read_probability_by_methy_level_bins(string reads_binning_file, int num_bins_of_methylation_level)
-{
-	vector<double> values;
-	vector<string> value_names;
-	double mvalue_step = 1.0/(double)num_bins_of_methylation_level;
-	char str[64];
-	for (int i=0; i<num_bins_of_methylation_level; i++) {
-		double v = i*mvalue_step + mvalue_step/2;
-		values.push_back( v );
-		sprintf(str,"%.6g", i*mvalue_step);
-		string start = string( str );
-		sprintf(str,"%.6g", (i+1)*mvalue_step);
-		string end = string( str );
-		sprintf(str,"%d", i+1 );
-		string idx = string( str );
-		sprintf(str,"%.6g", v );
-		string v_str = string( str );
-		value_names.push_back( idx + ":(" + start + "," + end + "):" + v_str );
-	}
-
-	int column_index_of_cpg_sites = 8; // 1-base index
-	int column_index_of_methy_status = 1 + column_index_of_cpg_sites; // 0-base index
-	// cout.precision(15);
-	//cerr << "reading '" << reads_binning_file << "'" << endl;
-	// print out the header line
-	Rcpp::Rcout << "marker_index";
-	for (int i=0; i<value_names.size(); i++)
-	  Rcpp::Rcout << "\t" << value_names[i];
-	Rcpp::Rcout << "\n";
-
-	// process each read (i.e., line) of the input file, then print out the calculated probabilities for each read.
-	unsigned long i_line=0; // line count of the input file
-
-	// input is a plain text file
-	ifstream fin;
-	fin.open(reads_binning_file.c_str());
-	if (fin.fail()){
-	  Rcpp::Rcerr << "Error: Unable to open " << reads_binning_file << " in calc_read_probability_by_methy_level_bins()" << endl;
-		// exit(EXIT_FAILURE);
-	}
-	string line;
-	while (!fin.eof()) {
-		getline(fin, line);
-		//cerr << "Line: " << line << endl;
-		if (i_line==0) {
-			// skip the header line of wig file
-			i_line++;
-			continue;
-		}
-		if (line.empty()) {
-			// this is the last line of the file
-			break;
-		}
-		int marker_index;
-		vector<GENOME_POSITION> cpg_sites;
-		vector<int> methy_status;
-		process_one_line_of_reads_binning_file(line, column_index_of_cpg_sites, column_index_of_methy_status, marker_index, cpg_sites, methy_status);
-		Rcpp::Rcout << marker_index;
-		for (int t=0; t<values.size(); t++) {
-			double p = calc_one_read_prob_by_single_value(values[t], methy_status);
-		  Rcpp::Rcout << "\t" << p;
-		}
-		  Rcpp::Rcout << "\n";
-			i_line++;
-	}
-	fin.close();
-}
+// void calc_read_probability_by_methy_level_bins(string reads_binning_file, int num_bins_of_methylation_level)
+// {
+// 	vector<double> values;
+// 	vector<string> value_names;
+// 	double mvalue_step = 1.0/(double)num_bins_of_methylation_level;
+// 	char str[64];
+// 	for (int i=0; i<num_bins_of_methylation_level; i++) {
+// 		double v = i*mvalue_step + mvalue_step/2;
+// 		values.push_back( v );
+// 		sprintf(str,"%.6g", i*mvalue_step);
+// 		string start = string( str );
+// 		sprintf(str,"%.6g", (i+1)*mvalue_step);
+// 		string end = string( str );
+// 		sprintf(str,"%d", i+1 );
+// 		string idx = string( str );
+// 		sprintf(str,"%.6g", v );
+// 		string v_str = string( str );
+// 		value_names.push_back( idx + ":(" + start + "," + end + "):" + v_str );
+// 	}
+// 
+// 	int column_index_of_cpg_sites = 8; // 1-base index
+// 	int column_index_of_methy_status = 1 + column_index_of_cpg_sites; // 0-base index
+// 	// cout.precision(15);
+// 	//cerr << "reading '" << reads_binning_file << "'" << endl;
+// 	// print out the header line
+// 	Rcpp::Rcout << "marker_index";
+// 	for (int i=0; i<value_names.size(); i++)
+// 	  Rcpp::Rcout << "\t" << value_names[i];
+// 	Rcpp::Rcout << "\n";
+// 
+// 	// process each read (i.e., line) of the input file, then print out the calculated probabilities for each read.
+// 	unsigned long i_line=0; // line count of the input file
+// 
+// 	// input is a plain text file
+// 	ifstream fin;
+// 	fin.open(reads_binning_file.c_str());
+// 	if (fin.fail()){
+// 	  Rcpp::Rcerr << "Error: Unable to open " << reads_binning_file << " in calc_read_probability_by_methy_level_bins()" << endl;
+// 		// exit(EXIT_FAILURE);
+// 	}
+// 	string line;
+// 	while (!fin.eof()) {
+// 		getline(fin, line);
+// 		//cerr << "Line: " << line << endl;
+// 		if (i_line==0) {
+// 			// skip the header line of wig file
+// 			i_line++;
+// 			continue;
+// 		}
+// 		if (line.empty()) {
+// 			// this is the last line of the file
+// 			break;
+// 		}
+// 		int marker_index;
+// 		vector<GENOME_POSITION> cpg_sites;
+// 		vector<int> methy_status;
+// 		process_one_line_of_reads_binning_file(line, column_index_of_cpg_sites, column_index_of_methy_status, marker_index, cpg_sites, methy_status);
+// 		Rcpp::Rcout << marker_index;
+// 		for (int t=0; t<values.size(); t++) {
+// 			double p = calc_one_read_prob_by_single_value(values[t], methy_status);
+// 		  Rcpp::Rcout << "\t" << p;
+// 		}
+// 		  Rcpp::Rcout << "\n";
+// 			i_line++;
+// 	}
+// 	fin.close();
+// }
 
 
 // Function: calculate the probability of each read that belongs to a tissue
