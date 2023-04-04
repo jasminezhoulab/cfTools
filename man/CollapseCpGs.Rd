@@ -7,23 +7,29 @@
 CollapseCpGs(CpG_OT, CpG_OB, output.dir = "", id = "", python = "python3")
 }
 \arguments{
-\item{CpG_OT}{a file of methylation information for CpG on the original top strand (OT), 
+\item{CpG_OT}{a file of methylation information for CpG on the 
+original top strand (OT), 
 which is one of the outputs from `bismark methylation extractor`.}
 
-\item{CpG_OB}{a file of methylation information for CpG on the original bottom strand (OB), 
+\item{CpG_OB}{a file of methylation information for CpG on the 
+original bottom strand (OB), 
 which is one of the outputs from `bismark methylation extractor`.}
 
-\item{output.dir}{a path to the output directory. Default is "", which means the output will not be written into a file.}
+\item{output.dir}{a path to the output directory. Default is "", 
+which means the output will not be written into a file.}
 
-\item{id}{an ID name for the input data. Default is "", which means the output will not be written into a file.}
+\item{id}{an ID name for the input data. Default is "", 
+which means the output will not be written into a file.}
 
 \item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
-a data frame in BED file format and/or written to an output BED file.
+a list in BED file format and/or written to 
+an output BED file.
 }
 \description{
-Collapse the methylation states of all CpGs corresponding to the same fragment onto one line in output.
+Collapse the methylation states of all CpGs corresponding to the 
+same fragment onto one line in output.
 }
 \examples{
 ## input files

@@ -7,16 +7,21 @@
 GenerateMarkerParam(x, sample.types, marker.names, output.file = "")
 }
 \arguments{
-\item{x}{a data frame of methylation levels (e.g., beta values), where each row is a sample and each column is a marker.}
+\item{x}{a list of methylation levels (e.g., beta values), 
+where each row is a sample and each column is a marker.}
 
-\item{sample.types}{a vector of sample types (e.g., tumor or normal, tissue types) corresponding to the rows of the data frame.}
+\item{sample.types}{a vector of sample types (e.g., tumor or normal, 
+tissue types) corresponding to the rows of the list.}
 
-\item{marker.names}{a vector of marker names corresponding to the columns of the data frame.}
+\item{marker.names}{a vector of marker names corresponding to the 
+columns of the list.}
 
-\item{output.file}{a character string naming the output file. Default is "", which means the output will not be written into a file.}
+\item{output.file}{a character string naming the output file. 
+Default is "", which means the output will not be written into a file.}
 }
 \value{
-a data frame containing the paired shape parameters of beta distributions for markers and/or written to an output file.
+a list containing the paired shape parameters of 
+beta distributions for markers and/or written to an output file.
 }
 \description{
 Output paired shape parameters of beta distributions for methylation markers.
@@ -24,9 +29,12 @@ Output paired shape parameters of beta distributions for methylation markers.
 \examples{
 ## input files
 demo.dir <- system.file("extdata", package="cfTools")
-methLevel <- read.csv(file.path(demo.dir, "beta_matrix.csv"), row.names=1)
-sampleTypes <- read.csv(file.path(demo.dir, "sample_type.csv"), row.names=1)$Sample.Type
-markerNames <- read.csv(file.path(demo.dir, "marker_index.csv"), row.names=1)$Marker.Index
+methLevel <- read.csv(file.path(demo.dir, "beta_matrix.csv"), 
+row.names=1)
+sampleTypes <- read.csv(file.path(demo.dir, "sample_type.csv"), 
+row.names=1)$Sample.Type
+markerNames <- read.csv(file.path(demo.dir, "marker_index.csv"), 
+row.names=1)$Marker.Index
 
 output <- GenerateMarkerParam(methLevel, sampleTypes, markerNames)
 

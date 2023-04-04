@@ -7,14 +7,17 @@
 CancerDetector(readsBinningFile, tissueMarkersFile, python = "python3")
 }
 \arguments{
-\item{readsBinningFile}{a file of the fragment-level methylation states of reads that mapped to the markers.}
+\item{readsBinningFile}{a file of the fragment-level methylation states 
+of reads that mapped to the markers.}
 
-\item{tissueMarkersFile}{a file of paired shape parameters of beta distributions for markers.}
+\item{tissueMarkersFile}{a file of paired shape parameters of beta 
+distributions for markers.}
 
 \item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
-cfDNA tumor burden and normal cfDNA fraction.
+a list containing the cfDNA tumor burden 
+and the normal cfDNA fraction.
 }
 \description{
 Detect tumor-derived cfDNA and estimate the tumor burden.

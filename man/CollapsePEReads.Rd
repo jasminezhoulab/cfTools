@@ -9,14 +9,17 @@ CollapsePEReads(bed_file, output.dir = "", id = "", python = "python3")
 \arguments{
 \item{bed_file}{a (sorted) BED file of paired-end reads.}
 
-\item{output.dir}{a path to the output directory. Default is "", which means the output will not be written into a file.}
+\item{output.dir}{a path to the output directory. Default is "", 
+which means the output will not be written into a file.}
 
-\item{id}{an ID name for the input data. Default is "", which means the output will not be written into a file.}
+\item{id}{an ID name for the input data. Default is "", 
+which means the output will not be written into a file.}
 
 \item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
-a data frame in BED file format and/or written to an output BED file.
+a list in BED file format and/or written to 
+an output BED file.
 }
 \description{
 Collapse BED file (the output of `bedtools bamtobed`) to 

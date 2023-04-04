@@ -14,20 +14,26 @@ cfDeconvolve(
 )
 }
 \arguments{
-\item{readsBinningFile}{a file of the fragment-level methylation states of reads that mapped to the markers. Either in plain text or compressed form.}
+\item{readsBinningFile}{a file of the fragment-level methylation states 
+of reads that mapped to the markers. Either in plain text or compressed form.}
 
-\item{tissueMarkersFile}{a file of paired shape parameters of beta distributions for markers.}
+\item{tissueMarkersFile}{a file of paired shape parameters of beta 
+distributions for markers.}
 
 \item{numTissues}{a number of tissue types.}
 
-\item{emAlgorithmType}{a read-based tissue deconvolution EM algorithm type: em.global.unknown (default), em.global.known, em.local.unknown, em.local.known.}
+\item{emAlgorithmType}{a read-based tissue deconvolution EM algorithm type: 
+em.global.unknown (default), em.global.known, em.local.unknown, 
+em.local.known.}
 
 \item{likelihoodRatioThreshold}{a positive float number. Default is 2.}
 
-\item{emMaxIterations}{a number of EM algorithm maximum iteration. Default is 100.}
+\item{emMaxIterations}{a number of EM algorithm maximum iteration. 
+Default is 100.}
 }
 \value{
-a data frame containing the cfDNA fractions of different tissue types and an unknown class.
+a list containing the cfDNA fractions of different 
+tissue types and an unknown class.
 }
 \description{
 Infer the tissue-type composition of plasma cfDNA.

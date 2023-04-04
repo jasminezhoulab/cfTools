@@ -1,7 +1,7 @@
 Package: cfTools
 Type: Package
 Title: Informatics Tools for Cell-Free DNA Study
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: c(
     person(given = "Ran",
         family = "Hu",
@@ -51,3 +51,4 @@ VignetteBuilder: knitr
 LinkingTo: 
     Rcpp,
     BH
+BugReports: https://github.com/jasminezhoulab/cfTools/issues
