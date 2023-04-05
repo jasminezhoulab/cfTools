@@ -27,8 +27,8 @@ fragment-level for paired-end sequencing reads.
 }
 \examples{
 ## input files
-demo.dir <- system.file("extdata", package="cfTools")
-PEReads <- file.path(demo.dir, "demo.sorted.bed.gz")
+demo.dir <- system.file("data", package="cfTools")
+PEReads <- file.path(demo.dir, "demo.sorted.bed.txt.gz")
 
 output <- CollapsePEReads(PEReads)
 

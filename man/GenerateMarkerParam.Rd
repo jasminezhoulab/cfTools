@@ -28,13 +28,13 @@ Output paired shape parameters of beta distributions for methylation markers.
 }
 \examples{
 ## input files
-demo.dir <- system.file("extdata", package="cfTools")
-methLevel <- read.csv(file.path(demo.dir, "beta_matrix.csv"), 
-row.names=1)
-sampleTypes <- read.csv(file.path(demo.dir, "sample_type.csv"), 
-row.names=1)$Sample.Type
-markerNames <- read.csv(file.path(demo.dir, "marker_index.csv"), 
-row.names=1)$Marker.Index
+demo.dir <- system.file("data", package="cfTools")
+methLevel <- read.table(file.path(demo.dir, "beta_matrix.txt"), 
+row.names=1, header = TRUE)
+sampleTypes <- read.table(file.path(demo.dir, "sample_type.txt"), 
+row.names=1, header = TRUE)$sampleType
+markerNames <- read.table(file.path(demo.dir, "marker_index.txt"), 
+row.names=1, header = TRUE)$markerIndex
 
 output <- GenerateMarkerParam(methLevel, sampleTypes, markerNames)
 

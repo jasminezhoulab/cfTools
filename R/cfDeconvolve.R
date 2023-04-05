@@ -28,7 +28,7 @@ count_meth_unmeth <- function(methString) {
 #'
 #' @examples
 #' ## input files
-#' demo.dir <- system.file("extdata", package="cfTools")
+#' demo.dir <- system.file("data", package="cfTools")
 #' readsBinningFile <- file.path(demo.dir, "cfDeconvolve.reads.txt")
 #' tissueMarkersFile <- file.path(demo.dir, "cfDeconvolve.markers.txt")
 #' numTissues <- 7
@@ -44,7 +44,7 @@ cfDeconvolve <- function(readsBinningFile, tissueMarkersFile, numTissues,
                         likelihoodRatioThreshold=2, 
                         emMaxIterations=100) {
 
-    extdata.dir <- system.file("extdata", package = "cfTools", mustWork = TRUE)
+    extdata.dir <- system.file("data", package = "cfTools", mustWork = TRUE)
     output.dir <- extdata.dir
     
     timeNow <- strsplit(strsplit(as.character(Sys.time()), 

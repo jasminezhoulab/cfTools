@@ -137,7 +137,7 @@ Example input data files are included within the package:
 
 ```{r demo}
 library(cfTools)
-demo.dir <- system.file("extdata", package="cfTools")
+demo.dir <- system.file("data", package="cfTools")
 ```
  
 ## Collapse paired-end sequencing reads to fragment-level
@@ -149,7 +149,7 @@ reads containing columns of chromosome name, chromosome start,
 chromosome end, sequence ID, mapping quality score, and strand. 
 
 ```{r}
-PEReads <- file.path(demo.dir, "demo.sorted.bed.gz")
+PEReads <- file.path(demo.dir, "demo.sorted.bed.txt.gz")
 head(read.table(PEReads, header=FALSE), 2)
 ```
 
@@ -212,12 +212,12 @@ corresponding to the rows of the list; (3) a vector of marker
 names corresponding to the columns of the list.
 
 ```{r}
-methLevel <- read.csv(file.path(demo.dir, "beta_matrix.csv"), 
-                      row.names=1)
-sampleTypes <- read.csv(file.path(demo.dir, "sample_type.csv"), 
-                        row.names=1)$Sample.Type
-markerNames <- read.csv(file.path(demo.dir, "marker_index.csv"), 
-                        row.names=1)$Marker.Index
+methLevel <- read.table(file.path(demo.dir, "beta_matrix.txt"), 
+                      row.names=1, header = TRUE)
+sampleTypes <- read.table(file.path(demo.dir, "sample_type.txt"), 
+                        row.names=1, header = TRUE)$sampleType
+markerNames <- read.table(file.path(demo.dir, "marker_index.txt"), 
+                        row.names=1, header = TRUE)$markerIndex
 print(methLevel)
 print(sampleTypes)
 print(markerNames)
@@ -243,10 +243,9 @@ First, transform the two BED files into GRanges classes.
 
 ```{r message=FALSE}
 library(GenomicRanges)
-demo.dir <- system.file("extdata", package="cfTools")
 
 # a BED file of fragment-level methylation information
-frag_bed <- read.csv(file.path(demo.dir, "demo.fragment_level.meth.bed"), 
+frag_bed <- read.csv(file.path(demo.dir, "demo.fragment_level.meth.bed.txt"), 
                      header=TRUE, sep="\t")
 frag_meth.gr <- GRanges(seqnames=frag_bed$chr, 
                      ranges=IRanges(frag_bed$start, frag_bed$end),
@@ -254,7 +253,7 @@ frag_meth.gr <- GRanges(seqnames=frag_bed$chr,
                      methState=as.character(frag_bed$methState))
 
 # a BED file of genomic regions of markers
-markers_bed <- read.csv(file.path(demo.dir, "markers.bed"), 
+markers_bed <- read.csv(file.path(demo.dir, "markers.bed.txt"), 
                         header=TRUE, sep="\t")
 markers.gr <- GRanges(seqnames=markers_bed$chr, 
                       ranges=IRanges(markers_bed$start, markers_bed$end),

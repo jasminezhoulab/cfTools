@@ -1,6 +1,6 @@
 test_that("cfDeconvolve() works", {
   
-    demo.dir <- system.file("extdata", package="cfTools")
+    demo.dir <- system.file("data", package="cfTools")
     readsBinningFile <- file.path(demo.dir, "cfDeconvolve.reads.txt")
     tissueMarkersFile <- file.path(demo.dir, "cfDeconvolve.markers.txt")
     numTissues <- 7

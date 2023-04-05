@@ -19,10 +19,10 @@
 #'
 #' @examples
 #' ## input files
-#' demo.dir <- system.file("extdata", package="cfTools")
-#' frag_bed <- read.delim(file.path(demo.dir, "demo.refo_frag.bed"), 
+#' demo.dir <- system.file("data", package="cfTools")
+#' frag_bed <- read.delim(file.path(demo.dir, "demo.refo_frag.bed.txt"), 
 #' colClasses = "character")
-#' meth_bed <- read.delim(file.path(demo.dir, "demo.refo_meth.bed"), 
+#' meth_bed <- read.delim(file.path(demo.dir, "demo.refo_meth.bed.txt"), 
 #' colClasses = "character")
 #'
 #' output <- GenerateFragMeth(frag_bed, meth_bed)
@@ -37,7 +37,7 @@ GenerateFragMeth <- function(frag_bed, meth_bed, output.dir="",
     
     if (output.dir=="" | id=="") {
         hasOutput <- FALSE
-        extdata.dir <- system.file("extdata", package = "cfTools", 
+        extdata.dir <- system.file("data", package = "cfTools", 
                                     mustWork = TRUE)
         output.dir <- extdata.dir
         

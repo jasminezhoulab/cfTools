@@ -1,12 +1,12 @@
 
 paraEstMoM <- function(meths) {
-    mu = mean(meths,na.rm = TRUE)
-    var = var(meths,na.rm = TRUE)
-    mu[mu == 0] = 1e-5
-    mu[mu == 1] = 1-1e-5
-    var[var == 0] = 1e-9
-    momAlpha = round(-mu*(var+mu*mu-mu)/var, digits = 3)
-    momBeta = round((mu-1)*(var+mu*mu-mu)/var, digits = 3)
+    mu <- mean(meths,na.rm = TRUE)
+    var <- var(meths,na.rm = TRUE)
+    mu[mu == 0] <- 1e-5
+    mu[mu == 1] <- 1-1e-5
+    var[var == 0] <- 1e-9
+    momAlpha <- round(-mu*(var+mu*mu-mu)/var, digits = 3)
+    momBeta <- round((mu-1)*(var+mu*mu-mu)/var, digits = 3)
     return(c('shape1'=momAlpha, 'shape2'=momBeta))
 }
 
@@ -30,13 +30,13 @@ paraEstMoM <- function(meths) {
 #' 
 #' @examples
 #' ## input files
-#' demo.dir <- system.file("extdata", package="cfTools")
-#' methLevel <- read.csv(file.path(demo.dir, "beta_matrix.csv"), 
-#' row.names=1)
-#' sampleTypes <- read.csv(file.path(demo.dir, "sample_type.csv"), 
-#' row.names=1)$Sample.Type
-#' markerNames <- read.csv(file.path(demo.dir, "marker_index.csv"), 
-#' row.names=1)$Marker.Index
+#' demo.dir <- system.file("data", package="cfTools")
+#' methLevel <- read.table(file.path(demo.dir, "beta_matrix.txt"), 
+#' row.names=1, header = TRUE)
+#' sampleTypes <- read.table(file.path(demo.dir, "sample_type.txt"), 
+#' row.names=1, header = TRUE)$sampleType
+#' markerNames <- read.table(file.path(demo.dir, "marker_index.txt"), 
+#' row.names=1, header = TRUE)$markerIndex
 #'
 #' output <- GenerateMarkerParam(methLevel, sampleTypes, markerNames)
 #' 

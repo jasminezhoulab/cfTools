@@ -33,7 +33,7 @@ same fragment onto one line in output.
 }
 \examples{
 ## input files
-demo.dir <- system.file("extdata", package="cfTools")
+demo.dir <- system.file("data", package="cfTools")
 CpG_OT <- file.path(demo.dir, "CpG_OT_demo.txt.gz")
 CpG_OB <- file.path(demo.dir, "CpG_OB_demo.txt.gz")
 

@@ -22,7 +22,7 @@
 #'
 #' @examples
 #' ## input files
-#' demo.dir <- system.file("extdata", package="cfTools")
+#' demo.dir <- system.file("data", package="cfTools")
 #' CpG_OT <- file.path(demo.dir, "CpG_OT_demo.txt.gz")
 #' CpG_OB <- file.path(demo.dir, "CpG_OB_demo.txt.gz")
 #'
@@ -40,7 +40,7 @@ CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="",
     
     if (output.dir=="" | id=="") {
         hasOutput <- FALSE
-        extdata.dir <- system.file("extdata", package = "cfTools", 
+        extdata.dir <- system.file("data", package = "cfTools", 
                                     mustWork = TRUE)
         output.dir <- extdata.dir
         

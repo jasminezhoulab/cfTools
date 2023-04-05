@@ -1,6 +1,6 @@
 test_that("CancerDetector() works", {
 
-    demo.dir <- system.file("extdata", package="cfTools")
+    demo.dir <- system.file("data", package="cfTools")
     readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt")
     tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt")
     

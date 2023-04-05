@@ -15,7 +15,7 @@
 #'
 #' @examples
 #' ## input files
-#' demo.dir <- system.file("extdata", package="cfTools")
+#' demo.dir <- system.file("data", package="cfTools")
 #' readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt")
 #' tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt")
 #'
@@ -29,7 +29,7 @@ CancerDetector <- function(readsBinningFile, tissueMarkersFile,
     python.script.dir <- system.file("python", package = "cfTools", 
                                     mustWork = TRUE)
     
-    extdata.dir <- system.file("extdata", package = "cfTools", mustWork = TRUE)
+    extdata.dir <- system.file("data", package = "cfTools", mustWork = TRUE)
     output.dir <- extdata.dir
     
     timeNow <- strsplit(strsplit(as.character(Sys.time()), 
