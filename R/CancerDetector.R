@@ -8,7 +8,6 @@
 #' of reads that mapped to the markers.
 #' @param tissueMarkersFile a file of paired shape parameters of beta 
 #' distributions for markers.
-#' @param python a path to Python 3. Default is "python3".
 #'
 #' @return a list containing the cfDNA tumor burden 
 #' and the normal cfDNA fraction.
@@ -16,14 +15,13 @@
 #' @examples
 #' ## input files
 #' demo.dir <- system.file("data", package="cfTools")
-#' readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt")
-#' tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt")
+#' readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt.gz")
+#' tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt.gz")
 #'
 #' CancerDetector(readsBinningFile, tissueMarkersFile)
 #'
 #' @export
-CancerDetector <- function(readsBinningFile, tissueMarkersFile, 
-                            python="python3") {
+CancerDetector <- function(readsBinningFile, tissueMarkersFile) {
 
     lambda <- 0.5 # a predefined lambda
     python.script.dir <- system.file("python", package = "cfTools", 
@@ -44,15 +42,21 @@ CancerDetector <- function(readsBinningFile, tissueMarkersFile,
 
     py1 <- paste0(python.script.dir, "/CalcReadLikelihood.py")
     py1.command <- paste(py1, readsBinningFile, tissueMarkersFile, 
-                        output.dir, id)
-    system2(command = python, args = py1.command)
-
+                         output.dir, id)
+    
     id.likelihood <- file.path(output.dir, paste0(id, ".likelihood.txt"))
     tumor.burden <- file.path(output.dir, paste0(id, ".tumor_burden.txt"))
     
     py2 <- paste0(python.script.dir, "/CancerDetector.py")
     py2.command <- paste(py2, id.likelihood, lambda, output.dir, id)
-    system2(command = python, args = py2.command)
+    
+    proc <- basiliskStart(my_env)
+    
+    basiliskRun(proc, function() {
+        system2(command = "python3", args = py1.command)
+        system2(command = "python3", args = py2.command)
+    })
+    basiliskStop(proc)
     
     tumor_burden <- read.csv(tumor.burden, header = FALSE, sep = "\t")
     file.remove(id.likelihood)

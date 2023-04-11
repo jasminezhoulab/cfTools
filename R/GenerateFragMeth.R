@@ -20,9 +20,9 @@
 #' @examples
 #' ## input files
 #' demo.dir <- system.file("data", package="cfTools")
-#' frag_bed <- read.delim(file.path(demo.dir, "demo.refo_frag.bed.txt"), 
+#' frag_bed <- read.delim(file.path(demo.dir, "demo.refo_frag.bed.txt.gz"), 
 #' colClasses = "character")
-#' meth_bed <- read.delim(file.path(demo.dir, "demo.refo_meth.bed.txt"), 
+#' meth_bed <- read.delim(file.path(demo.dir, "demo.refo_meth.bed.txt.gz"), 
 #' colClasses = "character")
 #'
 #' output <- GenerateFragMeth(frag_bed, meth_bed)

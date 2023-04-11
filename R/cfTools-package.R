@@ -6,11 +6,13 @@ NULL
 NULL
 #' @import Rcpp
 NULL
-#' @importFrom utils read.csv
-NULL
-#' @importFrom utils write.table
-NULL
-#' @importFrom utils read.delim
+#' @importFrom utils read.csv write.table read.delim
 NULL
 #' @import GenomicRanges
+NULL
+#' @importFrom basilisk basiliskRun BasiliskEnvironment
+NULL
+#' @importFrom basilisk basiliskStart basiliskStop
+NULL
+#' @importFrom R.utils gunzip
 NULL

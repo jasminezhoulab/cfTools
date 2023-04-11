@@ -4,7 +4,7 @@
 \alias{CollapseCpGs}
 \title{Generate fragment-level methylation states of CpGs}
 \usage{
-CollapseCpGs(CpG_OT, CpG_OB, output.dir = "", id = "", python = "python3")
+CollapseCpGs(CpG_OT, CpG_OB, output.dir = "", id = "")
 }
 \arguments{
 \item{CpG_OT}{a file of methylation information for CpG on the 
@@ -20,8 +20,6 @@ which means the output will not be written into a file.}
 
 \item{id}{an ID name for the input data. Default is "", 
 which means the output will not be written into a file.}
-
-\item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
 a list in BED file format and/or written to 

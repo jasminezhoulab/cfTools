@@ -212,11 +212,11 @@ corresponding to the rows of the list; (3) a vector of marker
 names corresponding to the columns of the list.
 
 ```{r}
-methLevel <- read.table(file.path(demo.dir, "beta_matrix.txt"), 
+methLevel <- read.table(file.path(demo.dir, "beta_matrix.txt.gz"), 
                       row.names=1, header = TRUE)
-sampleTypes <- read.table(file.path(demo.dir, "sample_type.txt"), 
+sampleTypes <- read.table(file.path(demo.dir, "sample_type.txt.gz"), 
                         row.names=1, header = TRUE)$sampleType
-markerNames <- read.table(file.path(demo.dir, "marker_index.txt"), 
+markerNames <- read.table(file.path(demo.dir, "marker_index.txt.gz"), 
                         row.names=1, header = TRUE)$markerIndex
 print(methLevel)
 print(sampleTypes)
@@ -245,7 +245,7 @@ First, transform the two BED files into GRanges classes.
 library(GenomicRanges)
 
 # a BED file of fragment-level methylation information
-frag_bed <- read.csv(file.path(demo.dir, "demo.fragment_level.meth.bed.txt"), 
+frag_bed <- read.csv(file.path(demo.dir, "demo.fragment_level.meth.bed.txt.gz"), 
                      header=TRUE, sep="\t")
 frag_meth.gr <- GRanges(seqnames=frag_bed$chr, 
                      ranges=IRanges(frag_bed$start, frag_bed$end),
@@ -253,7 +253,7 @@ frag_meth.gr <- GRanges(seqnames=frag_bed$chr,
                      methState=as.character(frag_bed$methState))
 
 # a BED file of genomic regions of markers
-markers_bed <- read.csv(file.path(demo.dir, "markers.bed.txt"), 
+markers_bed <- read.csv(file.path(demo.dir, "markers.bed.txt.gz"), 
                         header=TRUE, sep="\t")
 markers.gr <- GRanges(seqnames=markers_bed$chr, 
                       ranges=IRanges(markers_bed$start, markers_bed$end),
@@ -290,8 +290,8 @@ inputs are two files: (1) the fragment-level methylation states of reads
 All columns are delimited by TAB, and the first line is the column names.
 
 ```{r}
-fragMethFile <- file.path(demo.dir, "CancerDetector.reads.txt")
-markerParamFile <- file.path(demo.dir, "CancerDetector.markers.txt")
+fragMethFile <- file.path(demo.dir, "CancerDetector.reads.txt.gz")
+markerParamFile <- file.path(demo.dir, "CancerDetector.markers.txt.gz")
 head(read.csv(fragMethFile, sep = "\t", colClasses = "character"), 4)
 head(read.csv(markerParamFile, sep = "\t"), 4)
 ```
@@ -314,8 +314,8 @@ markers. All columns are delimited by TAB, and there is a header line of
 the column names.
 
 ```{r}
-fragMethFile2 <- file.path(demo.dir, "cfDeconvolve.reads.txt")
-markerParamFile2 <- file.path(demo.dir, "cfDeconvolve.markers.txt")
+fragMethFile2 <- file.path(demo.dir, "cfDeconvolve.reads.txt.gz")
+markerParamFile2 <- file.path(demo.dir, "cfDeconvolve.markers.txt.gz")
 head(read.csv(fragMethFile2, header=TRUE, sep="\t", 
               colClasses = "character"), 4)
 head(read.csv(markerParamFile2, header=TRUE, sep="\t", 

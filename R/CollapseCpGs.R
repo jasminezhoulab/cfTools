@@ -15,7 +15,6 @@
 #' which means the output will not be written into a file.
 #' @param id an ID name for the input data. Default is "", 
 #' which means the output will not be written into a file.
-#' @param python a path to Python 3. Default is "python3".
 #' 
 #' @return a list in BED file format and/or written to 
 #' an output BED file.
@@ -29,8 +28,7 @@
 #' output <- CollapseCpGs(CpG_OT, CpG_OB)
 #'
 #' @export
-CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="", 
-                        python="python3") {
+CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="") {
 
     # options(scipen = 999)
 
@@ -58,7 +56,13 @@ CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="",
     py2 <- paste0(python.script.dir, "/collapse_CpG.py")
     refo_meth <- file.path(output.dir, paste0(id, ".refo_meth.bed"))
     py2.command <- paste(py2, CpG_OT, CpG_OB, refo_meth)
-    system2(command = python, args = py2.command)
+    
+    proc <- basiliskStart(my_env)
+    
+    basiliskRun(proc, function() {
+        system2(command = "python3", args = py2.command)
+    })
+    basiliskStop(proc)
     
     output_bed <- read.csv(refo_meth, sep="\t", header = FALSE, 
                             colClasses = "character")

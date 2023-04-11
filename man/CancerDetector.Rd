@@ -4,7 +4,7 @@
 \alias{CancerDetector}
 \title{Cancer Detector}
 \usage{
-CancerDetector(readsBinningFile, tissueMarkersFile, python = "python3")
+CancerDetector(readsBinningFile, tissueMarkersFile)
 }
 \arguments{
 \item{readsBinningFile}{a file of the fragment-level methylation states 
@@ -12,8 +12,6 @@ of reads that mapped to the markers.}
 
 \item{tissueMarkersFile}{a file of paired shape parameters of beta 
 distributions for markers.}
-
-\item{python}{a path to Python 3. Default is "python3".}
 }
 \value{
 a list containing the cfDNA tumor burden 
@@ -25,8 +23,8 @@ Detect tumor-derived cfDNA and estimate the tumor burden.
 \examples{
 ## input files
 demo.dir <- system.file("data", package="cfTools")
-readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt")
-tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt")
+readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt.gz")
+tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt.gz")
 
 CancerDetector(readsBinningFile, tissueMarkersFile)
 

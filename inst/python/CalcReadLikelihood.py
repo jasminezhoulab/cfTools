@@ -6,7 +6,7 @@
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 #
 
-import sys, re, os
+import sys, re, os, gzip
 from scipy.special import gamma
 # import numpy as np
 
@@ -70,6 +70,29 @@ def read_paired_values_file_of_bins(file):
 				bins2pairedvalues[class_name][bin_index] = [alpha, beta, beta_function(alpha, beta)]
 	return bins2pairedvalues, class_names, bins_index_list
 
+def read_paired_values_file_of_bins_gz(file):
+	bins2pairedvalues = {}
+	bins_index_list = []
+	with gzip.open(file,'rt') as f:
+		column_names = next(f).rstrip().split('\t')
+		class_names = column_names[1:] ## remove chr start end columns
+		n_items = len(column_names)
+		for c in class_names:
+			bins2pairedvalues[c] = {}
+		for line in f:
+			items = line.rstrip().split('\t')
+			bin_index = items[0]
+			bins_index_list.append( bin_index )
+			for i in range(1, n_items): ## remove chr start end columns
+				class_name = column_names[i]
+				alpha, beta = map(float, re.split(':|,', items[i]))
+				if (alpha+beta)>160:
+					# gamma(x+y+1) in scipy will be possibly "inf", so we approximate it, by scaling alpha and beta so that alpha+beta=160
+					alpha = alpha*160.0/(alpha+beta)
+					beta = beta*160.0/(alpha+beta)
+				bins2pairedvalues[class_name][bin_index] = [alpha, beta, beta_function(alpha, beta)]
+	return bins2pairedvalues, class_names, bins_index_list
+
 reads_binning_file = sys.argv[1]
 markers_file = sys.argv[2]
 output_dir = sys.argv[3]
@@ -80,30 +103,20 @@ if output_dir!="" and id!="":
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-bins2pairedvalues, class_names, bins_index_list = read_paired_values_file_of_bins( markers_file )
+if markers_file.endswith('gz'):
+	bins2pairedvalues, class_names, bins_index_list = read_paired_values_file_of_bins_gz( markers_file )
+else:
+	bins2pairedvalues, class_names, bins_index_list = read_paired_values_file_of_bins( markers_file )
+	
+	
+	
+	
 
-#
-# input reads_binning file format:
-# Each line is a read. All columns are delimited by TAB. There is one header line.
-# Column 1: marker_index
-# Column 2: number of CpG sites in the read
-# Column 3: a binary vector of methylation status for all CpG sites in this read (no delimit). For example, 00111100
-#
-# output file format:
-# Each line is a read. All columns are delimited by TAB. There is one header line.
-# Column 1: marker index (1-base)
-# Columns 2 and 3: each column is a probability value of a class. 
-#
+if reads_binning_file.endswith('gz'):
+	fin = gzip.open(reads_binning_file,'rt')
+else:
+	fin = open(reads_binning_file,'r')
 
-
-# if reads_binning_file == 'stdin':
-# 	fin = sys.stdout
-# elif reads_binning_file.endswith('gz'): ###commented by Ran
-# 	fin = gzip.open(reads_binning_file)
-# else:
-# 	fin = open(reads_binning_file)
-
-fin = open(reads_binning_file,'r')
 # fin.next() # skip header line
 lines = fin.readlines()[1:]
 

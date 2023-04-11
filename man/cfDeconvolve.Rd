@@ -41,8 +41,8 @@ Infer the tissue-type composition of plasma cfDNA.
 \examples{
 ## input files
 demo.dir <- system.file("data", package="cfTools")
-readsBinningFile <- file.path(demo.dir, "cfDeconvolve.reads.txt")
-tissueMarkersFile <- file.path(demo.dir, "cfDeconvolve.markers.txt")
+readsBinningFile <- file.path(demo.dir, "cfDeconvolve.reads.txt.gz")
+tissueMarkersFile <- file.path(demo.dir, "cfDeconvolve.markers.txt.gz")
 numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
 likelihoodRatioThreshold <- 2

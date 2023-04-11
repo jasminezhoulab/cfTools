@@ -31,11 +31,11 @@ paraEstMoM <- function(meths) {
 #' @examples
 #' ## input files
 #' demo.dir <- system.file("data", package="cfTools")
-#' methLevel <- read.table(file.path(demo.dir, "beta_matrix.txt"), 
+#' methLevel <- read.table(file.path(demo.dir, "beta_matrix.txt.gz"), 
 #' row.names=1, header = TRUE)
-#' sampleTypes <- read.table(file.path(demo.dir, "sample_type.txt"), 
+#' sampleTypes <- read.table(file.path(demo.dir, "sample_type.txt.gz"), 
 #' row.names=1, header = TRUE)$sampleType
-#' markerNames <- read.table(file.path(demo.dir, "marker_index.txt"), 
+#' markerNames <- read.table(file.path(demo.dir, "marker_index.txt.gz"), 
 #' row.names=1, header = TRUE)$markerIndex
 #'
 #' output <- GenerateMarkerParam(methLevel, sampleTypes, markerNames)

@@ -29,8 +29,8 @@ count_meth_unmeth <- function(methString) {
 #' @examples
 #' ## input files
 #' demo.dir <- system.file("data", package="cfTools")
-#' readsBinningFile <- file.path(demo.dir, "cfDeconvolve.reads.txt")
-#' tissueMarkersFile <- file.path(demo.dir, "cfDeconvolve.markers.txt")
+#' readsBinningFile <- file.path(demo.dir, "cfDeconvolve.reads.txt.gz")
+#' tissueMarkersFile <- file.path(demo.dir, "cfDeconvolve.markers.txt.gz")
 #' numTissues <- 7
 #' emAlgorithmType <- "em.global.unknown"
 #' likelihoodRatioThreshold <- 2
@@ -73,10 +73,21 @@ cfDeconvolve <- function(readsBinningFile, tissueMarkersFile, numTissues,
     
     outputFile <- file.path(output.dir, paste0(id, ".profile"))
     
-    read_deconvolution_cpp(readsBinningFile.count, numTissues, 
-                            likelihoodRatioThreshold, tissueMarkersFile,
-                            emAlgorithmType, outputFile, "tissueFraction", 
-                            emMaxIterations)
+    if (endsWith(tissueMarkersFile, ".gz")) {
+        gunzip(tissueMarkersFile, remove=FALSE)
+        tissueMarkersFile.unzip <- strsplit(tissueMarkersFile, ".gz")[[1]]
+        
+        read_deconvolution_cpp(readsBinningFile.count, numTissues, 
+                               likelihoodRatioThreshold, tissueMarkersFile.unzip,
+                               emAlgorithmType, outputFile, "tissueFraction", 
+                               emMaxIterations)
+        file.remove(tissueMarkersFile.unzip)
+    } else {
+        read_deconvolution_cpp(readsBinningFile.count, numTissues, 
+                               likelihoodRatioThreshold, tissueMarkersFile,
+                               emAlgorithmType, outputFile, "tissueFraction", 
+                               emMaxIterations)
+    }
 
     output <- read.csv(outputFile, header=TRUE, sep="\t")
     # system2(command = "rm", args = outputFile)
