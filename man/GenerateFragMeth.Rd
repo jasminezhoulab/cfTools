@@ -8,10 +8,10 @@ GenerateFragMeth(frag_bed, meth_bed, output.dir = "", id = "")
 }
 \arguments{
 \item{frag_bed}{a BED file containing information for every fragment, 
-which is the output of CollapsePEReads().}
+which is the output of MergePEReads().}
 
 \item{meth_bed}{a BED file containing methylation states on every fragment, 
-which is the output of CollapseCpGs().}
+which is the output of MergeCpGs().}
 
 \item{output.dir}{a path to the output directory. Default is "", 
 which means the output will not be written into a file.}

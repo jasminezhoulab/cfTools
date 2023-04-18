@@ -1,4 +1,4 @@
-# cfTools
+# Analyzing cell-free DNA methylation data with cfTools
 
 cfTools is an R package for cell-free DNA (cfDNA) methylation data analysis, including (1) cancer detection: sensitively detect tumor-derived cfDNA and estimate the tumor-derived cfDNA fraction (tumor burden); (2) tissue deconvolution: infer the tissue type composition and the cfDNA fraction of multiple tissue types for a plasma cfDNA sample.
 

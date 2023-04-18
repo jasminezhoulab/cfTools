@@ -2,7 +2,7 @@
 #' Generate fragment-level information for paired-end sequencing reads
 #'
 #' @description
-#' Collapse BED file (the output of `bedtools bamtobed`) to 
+#' Merge BED file (the output of `bedtools bamtobed`) to 
 #' fragment-level for paired-end sequencing reads.
 #'
 #' @param bed_file a (sorted) BED file of paired-end reads.
@@ -19,10 +19,10 @@
 #' demo.dir <- system.file("data", package="cfTools")
 #' PEReads <- file.path(demo.dir, "demo.sorted.bed.txt.gz")
 #'
-#' output <- CollapsePEReads(PEReads)
+#' output <- MergePEReads(PEReads)
 #'
 #' @export
-CollapsePEReads <- function(bed_file, output.dir="", id="") {
+MergePEReads <- function(bed_file, output.dir="", id="") {
 
     python.script.dir <- system.file("python", package = "cfTools", 
                                     mustWork = TRUE)

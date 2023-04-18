@@ -6,9 +6,9 @@
 #' methylation states on each fragment into one list.
 #'
 #' @param frag_bed a BED file containing information for every fragment, 
-#' which is the output of CollapsePEReads().
+#' which is the output of MergePEReads().
 #' @param meth_bed a BED file containing methylation states on every fragment, 
-#' which is the output of CollapseCpGs().
+#' which is the output of MergeCpGs().
 #' @param output.dir a path to the output directory. Default is "", 
 #' which means the output will not be written into a file.
 #' @param id an ID name for the input data. Default is "", 

@@ -1,12 +1,12 @@
 
 paraEstMoM <- function(meths) {
     mu <- mean(meths,na.rm = TRUE)
-    var <- var(meths,na.rm = TRUE)
+    variant <- var(meths,na.rm = TRUE)
     mu[mu == 0] <- 1e-5
     mu[mu == 1] <- 1-1e-5
-    var[var == 0] <- 1e-9
-    momAlpha <- round(-mu*(var+mu*mu-mu)/var, digits = 3)
-    momBeta <- round((mu-1)*(var+mu*mu-mu)/var, digits = 3)
+    variant[variant == 0] <- 1e-9
+    momAlpha <- round(-mu*(variant+mu*mu-mu)/variant, digits = 3)
+    momBeta <- round((mu-1)*(variant+mu*mu-mu)/variant, digits = 3)
     return(c('shape1'=momAlpha, 'shape2'=momBeta))
 }
 

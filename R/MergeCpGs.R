@@ -2,7 +2,7 @@
 #' Generate fragment-level methylation states of CpGs
 #'
 #' @description
-#' Collapse the methylation states of all CpGs corresponding to the 
+#' Merge the methylation states of all CpGs corresponding to the 
 #' same fragment onto one line in output.
 #'
 #' @param CpG_OT a file of methylation information for CpG on the 
@@ -25,10 +25,10 @@
 #' CpG_OT <- file.path(demo.dir, "CpG_OT_demo.txt.gz")
 #' CpG_OB <- file.path(demo.dir, "CpG_OB_demo.txt.gz")
 #'
-#' output <- CollapseCpGs(CpG_OT, CpG_OB)
+#' output <- MergeCpGs(CpG_OT, CpG_OB)
 #'
 #' @export
-CollapseCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="") {
+MergeCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="") {
 
     # options(scipen = 999)
 
