@@ -55,12 +55,12 @@ MergeCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="") {
     
     py2 <- paste0(python.script.dir, "/collapse_CpG.py")
     refo_meth <- file.path(output.dir, paste0(id, ".refo_meth.bed"))
-    py2.command <- paste(py2, CpG_OT, CpG_OB, refo_meth)
+    py2.command <- c(py2, CpG_OT, CpG_OB, refo_meth)
     
     proc <- basiliskStart(my_env)
     
     basiliskRun(proc, function() {
-        system2(command = "python3", args = py2.command)
+        system2(command = "python", args = py2.command)
     })
     basiliskStop(proc)
     

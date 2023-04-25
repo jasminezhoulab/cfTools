@@ -41,20 +41,20 @@ CancerDetector <- function(readsBinningFile, tissueMarkersFile) {
     # id <- strsplit(as.character(Sys.time()), " ")[[1]][2]
 
     py1 <- paste0(python.script.dir, "/CalcReadLikelihood.py")
-    py1.command <- paste(py1, readsBinningFile, tissueMarkersFile, 
+    py1.command <- c(py1, readsBinningFile, tissueMarkersFile, 
                          output.dir, id)
     
     id.likelihood <- file.path(output.dir, paste0(id, ".likelihood.txt"))
     tumor.burden <- file.path(output.dir, paste0(id, ".tumor_burden.txt"))
     
     py2 <- paste0(python.script.dir, "/CancerDetector.py")
-    py2.command <- paste(py2, id.likelihood, lambda, output.dir, id)
+    py2.command <- c(py2, id.likelihood, lambda, output.dir, id)
     
     proc <- basiliskStart(my_env)
     
     basiliskRun(proc, function() {
-        system2(command = "python3", args = py1.command)
-        system2(command = "python3", args = py2.command)
+        system2(command = "python", args = py1.command)
+        system2(command = "python", args = py2.command)
     })
     basiliskStop(proc)
     

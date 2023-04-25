@@ -1,7 +1,7 @@
 Package: cfTools
 Type: Package
 Title: Informatics Tools for Cell-Free DNA Study
-Version: 0.99.5
+Version: 0.99.6
 Authors@R: c(
     person(given = "Ran",
         family = "Hu",
@@ -16,10 +16,12 @@ Authors@R: c(
         comment = c(ORCID = "0000-0002-1960-6016")),
     person(c("Xianghong", "Jasmine"), "Zhou", 
         role = "aut", 
-        email = "XJZhou@mednet.ucla.edu"),
+        email = "XJZhou@mednet.ucla.edu", 
+        comment = c(ORCID = "0000-0002-4522-7490")),
     person("Wenyuan", "Li", 
         role = "aut",
-        email = "WenyuanLi@mednet.ucla.edu"))
+        email = "WenyuanLi@mednet.ucla.edu",
+        comment = c(ORCID = "0000-0002-5029-8525")))
 Description: The cfTools R package provides methods for cell-free DNA (cfDNA) 
     methylation data analysis to facilitate cfDNA-based studies. Given the 
     methylation sequencing data of a cfDNA sample, for each cancer marker 

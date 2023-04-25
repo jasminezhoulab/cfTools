@@ -47,12 +47,12 @@ MergePEReads <- function(bed_file, output.dir="", id="") {
     
     py1 <- paste0(python.script.dir, "/collapse_bed_file_strand_correct.py")
     refo_frag <- file.path(output.dir, paste0(id, ".refo_frag.bed"))
-    py1.command <- paste(py1, bed_file, refo_frag)
+    py1.command <- c(py1, bed_file, refo_frag)
     
     proc <- basiliskStart(my_env)
     
     basiliskRun(proc, function() {
-        system2(command = "python3", args = py1.command)
+        system2(command = "python", args = py1.command)
     })
     basiliskStop(proc)
     
