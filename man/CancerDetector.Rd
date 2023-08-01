@@ -4,7 +4,7 @@
 \alias{CancerDetector}
 \title{Cancer Detector}
 \usage{
-CancerDetector(readsBinningFile, tissueMarkersFile)
+CancerDetector(readsBinningFile, tissueMarkersFile, lambda = 0.5)
 }
 \arguments{
 \item{readsBinningFile}{a file of the fragment-level methylation states 
@@ -12,6 +12,9 @@ of reads that mapped to the markers.}
 
 \item{tissueMarkersFile}{a file of paired shape parameters of beta 
 distributions for markers.}
+
+\item{lambda}{a number controlling "confounding" markers' distance 
+from average markers.}
 }
 \value{
 a list containing the cfDNA tumor burden 
