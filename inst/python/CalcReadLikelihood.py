@@ -8,10 +8,17 @@
 
 import sys, re, os, gzip
 from scipy.special import gamma
+import math ################RH
 # import numpy as np
 
-def beta_function(x, y):
-	return gamma(x) * gamma(y) / gamma(x+y)
+def beta_function(x, y):################RH
+  if math.isinf(gamma(x+y)):
+    result = 1e-300
+  else:
+    result = gamma(x) * gamma(y) / gamma(x+y)
+    if result==0:
+      result = 1e-300
+  return result
 
 def calc_read_likelihood(methy_states_str, alpha, beta, B):
 	num_ones = methy_states_str.count('1')

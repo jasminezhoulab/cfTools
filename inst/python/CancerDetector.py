@@ -8,6 +8,7 @@
 
 import sys, os
 import numpy as np
+np.seterr(divide = 'ignore') ##########RH
 
 def ismember(A, B): # A and B are numpy.array
 	return [np.sum(B==a) for a in A]

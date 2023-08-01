@@ -8,6 +8,8 @@
 #' of reads that mapped to the markers.
 #' @param tissueMarkersFile a file of paired shape parameters of beta 
 #' distributions for markers.
+#' @param lambda a number controlling "confounding" markers' distance 
+#' from average markers.
 #'
 #' @return a list containing the cfDNA tumor burden 
 #' and the normal cfDNA fraction.
@@ -21,9 +23,10 @@
 #' CancerDetector(readsBinningFile, tissueMarkersFile)
 #'
 #' @export
-CancerDetector <- function(readsBinningFile, tissueMarkersFile) {
+CancerDetector <- function(readsBinningFile, tissueMarkersFile, 
+                           lambda = 0.5) {
 
-    lambda <- 0.5 # a predefined lambda
+    # lambda <- 0.5 # a predefined lambda
     python.script.dir <- system.file("python", package = "cfTools", 
                                     mustWork = TRUE)
     
