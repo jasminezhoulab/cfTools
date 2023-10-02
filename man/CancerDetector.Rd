@@ -4,7 +4,12 @@
 \alias{CancerDetector}
 \title{Cancer Detector}
 \usage{
-CancerDetector(readsBinningFile, tissueMarkersFile)
+CancerDetector(
+  readsBinningFile,
+  tissueMarkersFile,
+  lambda = 0.5,
+  id = "sample"
+)
 }
 \arguments{
 \item{readsBinningFile}{a file of the fragment-level methylation states 
@@ -12,6 +17,11 @@ of reads that mapped to the markers.}
 
 \item{tissueMarkersFile}{a file of paired shape parameters of beta 
 distributions for markers.}
+
+\item{lambda}{a number controlling "confounding" markers' distance 
+from average markers.}
+
+\item{id}{the sample ID.}
 }
 \value{
 a list containing the cfDNA tumor burden 
@@ -25,7 +35,9 @@ Detect tumor-derived cfDNA and estimate the tumor burden.
 demo.dir <- system.file("data", package="cfTools")
 readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt.gz")
 tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt.gz")
+lambda <- 0.5
+id <- "test"
 
-CancerDetector(readsBinningFile, tissueMarkersFile)
+CancerDetector(readsBinningFile, tissueMarkersFile, lambda, id)
 
 }

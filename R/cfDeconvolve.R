@@ -22,6 +22,7 @@ count_meth_unmeth <- function(methString) {
 #' @param likelihoodRatioThreshold a positive float number. Default is 2. 
 #' @param emMaxIterations a number of EM algorithm maximum iteration. 
 #' Default is 100.
+#' @param id the sample ID.
 #'
 #' @return a list containing the cfDNA fractions of different 
 #' tissue types and an unknown class.
@@ -34,22 +35,24 @@ count_meth_unmeth <- function(methString) {
 #' numTissues <- 7
 #' emAlgorithmType <- "em.global.unknown"
 #' likelihoodRatioThreshold <- 2
+#' emMaxIterations <- 100
+#' id <- "test"
 #'
 #' cfDeconvolve(readsBinningFile, tissueMarkersFile, numTissues, 
-#' emAlgorithmType, likelihoodRatioThreshold)
+#' emAlgorithmType, likelihoodRatioThreshold, emMaxIterations, id)
 #'
 #' @export
 cfDeconvolve <- function(readsBinningFile, tissueMarkersFile, numTissues,
                         emAlgorithmType="em.global.unknown", 
                         likelihoodRatioThreshold=2, 
-                        emMaxIterations=100) {
+                        emMaxIterations=100, id="sample") {
 
     extdata.dir <- system.file("data", package = "cfTools", mustWork = TRUE)
     output.dir <- extdata.dir
     
     timeNow <- strsplit(strsplit(as.character(Sys.time()), 
                         " ")[[1]][2], ":")[[1]]
-    id <- paste0(timeNow[1], timeNow[2], timeNow[3])
+    id <- paste0(id, timeNow[1], timeNow[2], timeNow[3])
     
     # output.dir <- paste0(extdata.dir, "/tmp/")
     # if (system.file("extdata/tmp", package = "cfTools") == "") {

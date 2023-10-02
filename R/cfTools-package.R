@@ -16,3 +16,9 @@ NULL
 NULL
 #' @importFrom R.utils gunzip
 NULL
+#' @importFrom utils read.table
+NULL
+#' @importFrom stats var
+NULL
+#' @importFrom cfToolsData DNN1 DNN2
+NULL
