@@ -10,7 +10,8 @@ cfDeconvolve(
   numTissues,
   emAlgorithmType = "em.global.unknown",
   likelihoodRatioThreshold = 2,
-  emMaxIterations = 100
+  emMaxIterations = 100,
+  id = "sample"
 )
 }
 \arguments{
@@ -30,6 +31,8 @@ em.local.known.}
 
 \item{emMaxIterations}{a number of EM algorithm maximum iteration. 
 Default is 100.}
+
+\item{id}{the sample ID.}
 }
 \value{
 a list containing the cfDNA fractions of different 
@@ -46,8 +49,10 @@ tissueMarkersFile <- file.path(demo.dir, "cfDeconvolve.markers.txt.gz")
 numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
 likelihoodRatioThreshold <- 2
+emMaxIterations <- 100
+id <- "test"
 
 cfDeconvolve(readsBinningFile, tissueMarkersFile, numTissues, 
-emAlgorithmType, likelihoodRatioThreshold)
+emAlgorithmType, likelihoodRatioThreshold, emMaxIterations, id)
 
 }

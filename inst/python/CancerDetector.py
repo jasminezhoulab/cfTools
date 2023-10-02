@@ -20,7 +20,7 @@ def loadReadProbilities(fileName):
 		next(f) # skip the first header line
 		for line in f:
 			items = line.rstrip().split('\t')
-			markerIdReads.append( int(items[0]) )
+			markerIdReads.append( int(float(items[0])) )
 			p.append( np.array( list(map(float,items[1:])) ) )
 	f.close()
 	return (np.array(markerIdReads), np.matrix(p))

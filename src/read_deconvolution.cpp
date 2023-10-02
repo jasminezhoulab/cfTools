@@ -231,9 +231,9 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		}
 		//////////////////////////////
 		////// begin for debug
-		Rcpp::Rcerr  << "tissue fractions: ";
-		print_vec(Rcpp::Rcerr, theta, ", ");
-		Rcpp::Rcerr  << endl;
+		// Rcpp::Rcerr  << "tissue fractions: ";
+		// print_vec(Rcpp::Rcerr, theta, ", ");
+		// Rcpp::Rcerr  << endl;
 		////// end for debug
 		//////////////////////////////
 	}

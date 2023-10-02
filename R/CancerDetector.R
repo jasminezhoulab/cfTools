@@ -10,6 +10,7 @@
 #' distributions for markers.
 #' @param lambda a number controlling "confounding" markers' distance 
 #' from average markers.
+#' @param id the sample ID.
 #'
 #' @return a list containing the cfDNA tumor burden 
 #' and the normal cfDNA fraction.
@@ -19,12 +20,14 @@
 #' demo.dir <- system.file("data", package="cfTools")
 #' readsBinningFile <- file.path(demo.dir, "CancerDetector.reads.txt.gz")
 #' tissueMarkersFile <- file.path(demo.dir, "CancerDetector.markers.txt.gz")
+#' lambda <- 0.5
+#' id <- "test"
 #'
-#' CancerDetector(readsBinningFile, tissueMarkersFile)
+#' CancerDetector(readsBinningFile, tissueMarkersFile, lambda, id)
 #'
 #' @export
 CancerDetector <- function(readsBinningFile, tissueMarkersFile, 
-                           lambda = 0.5) {
+                           lambda = 0.5, id = "sample") {
 
     # lambda <- 0.5 # a predefined lambda
     python.script.dir <- system.file("python", package = "cfTools", 
@@ -35,7 +38,7 @@ CancerDetector <- function(readsBinningFile, tissueMarkersFile,
     
     timeNow <- strsplit(strsplit(as.character(Sys.time()), 
                         " ")[[1]][2], ":")[[1]]
-    id <- paste0(timeNow[1], timeNow[2], timeNow[3])
+    id <- paste0(id, timeNow[1], timeNow[2], timeNow[3])
     
     # output.dir <- paste0(extdata.dir, "/tmp/")
     # if (system.file("extdata/tmp", package = "cfTools") == "") {
