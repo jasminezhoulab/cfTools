@@ -29,7 +29,7 @@
 CancerDetector <- function(readsBinningFile, tissueMarkersFile, 
                            lambda = 0.5, id = "sample") {
 
-    # lambda <- 0.5 # a predefined lambda
+    lambda <- 0.5 # a predefined lambda
     python.script.dir <- system.file("python", package = "cfTools", 
                                     mustWork = TRUE)
     

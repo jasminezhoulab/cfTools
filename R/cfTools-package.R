@@ -20,5 +20,3 @@ NULL
 NULL
 #' @importFrom stats var
 NULL
-#' @importFrom cfToolsData DNN1 DNN2
-NULL

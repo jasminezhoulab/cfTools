@@ -107,8 +107,6 @@ unmethylated CpG and 1 represents methylated CpG on the same fragment);
 * **Input 2**: methylation pattern (paired shape parameters of beta 
 distributions) of markers. 
 
-`cfSort()` mainly takes **Input 1** as the only input file.
-
 Section 3.1, 3.2, 3.3 provide an example for generating **Input 1**. 
 We require users to provide pre-processed paired-end bisulfite sequencing 
 reads (i.e., aligned to the reference genome). For each cfDNA sample, 
@@ -360,31 +358,6 @@ tissueFraction <- cfDeconvolve(fragMethFile2, markerParamFile2, numTissues,
 tissueFraction
 ```
 
-# Tissue deconvolution with `cfSort()`
-
-Function `cfSort()` estimates fractions of cfDNA fragments derived from 29 
-major human tissues. It is the first supervised tissue deconvolution 
-approach with deep learning models. The main input file is similar to function 
-`CancerDetector()` and `cfDeconvolve()`: the fragment-level methylation 
-states of reads (column `methState`) that mapped to the tissue-specific 
-markers. Additionally, there are a few more columns which can be derived 
-from the output of `MergeCpGs()`.
-
-```{r}
-fragMethInfo <- file.path(demo.dir, "cfSort.reads.txt.gz")
-head(read.csv(fragMethInfo, header=TRUE, sep="\t", 
-              colClasses = "character"), 4)
-```
-Column *methCount* is the number of methylated CpG sites (methState=1) 
-on the fragment, and column *unmethCount* is the number of unmethylated 
-CpG sites (methState=0) on the fragment.
-
-The output is a list containing the cfDNA fractions of 29 tissue types.
-
-```{r, message=FALSE}
-tissueFraction2 <- cfSort(fragMethInfo, "demo")
-tissueFraction2
-```
 
 # Citations 
 
@@ -399,8 +372,6 @@ Janzen C, Zhou X, Pellegrini M, Devaskar SU. Cell-free DNA methylation and
 transcriptomic signature prediction of pregnancies with adverse outcomes. 
 *Epigenetics*. 2021 Jun;16(6):642-661. doi: 10.1080/15592294.2020.1816774. 
 PMID: 33045922; PMCID: PMC8143248.
-
-[3] Li S, Zeng W, Ni X, Liu Q, Li W, Stackpole ML, Zhou Y, Gower A, Krysan K, Ahuja P, Lu DS, Raman SS, Hsu W, Aberle DR, Magyar CE, French SW, Han SB, Garon EB, Agopian VG, Wong WH, Dubinett SM, Zhou XJ. Comprehensive tissue deconvolution of cell-free DNA by deep learning for disease diagnosis and monitoring. *Proc Natl Acad Sci U S A*. 2023 Jul 11;120(28):e2305236120. doi: 10.1073/pnas.2305236120. Epub 2023 Jul 3. PMID: 37399400.
 
 # Session info {-}
 ```{r sessionInfo, echo=FALSE}
