@@ -67,7 +67,7 @@ cfDNA fragments (or reads) in two contexts:
 fragments and background normal fragments (2 classes), and estimate the 
 tumor-derived cfDNA fraction $\theta$ ($0\leq \theta < 1$).
 
-2. Tissue deconvolution [2]: separate cfDNA fragments from different tissues 
+2. Tissue deconvolution [2,3]: separate cfDNA fragments from different tissues 
 (> 2 classes), and estimate the cfDNA fraction $\theta_t$ 
 ($0\leq \theta_t < 1$) of different tissue types (including an unknown type) 
 $t$ for a plasma cfDNA sample.
@@ -399,6 +399,8 @@ Janzen C, Zhou X, Pellegrini M, Devaskar SU. Cell-free DNA methylation and
 transcriptomic signature prediction of pregnancies with adverse outcomes. 
 *Epigenetics*. 2021 Jun;16(6):642-661. doi: 10.1080/15592294.2020.1816774. 
 PMID: 33045922; PMCID: PMC8143248.
+
+[3] Li S, Zeng W, Ni X, Liu Q, Li W, Stackpole ML, Zhou Y, Gower A, Krysan K, Ahuja P, Lu DS, Raman SS, Hsu W, Aberle DR, Magyar CE, French SW, Han SB, Garon EB, Agopian VG, Wong WH, Dubinett SM, Zhou XJ. Comprehensive tissue deconvolution of cell-free DNA by deep learning for disease diagnosis and monitoring. *Proc Natl Acad Sci U S A*. 2023 Jul 11;120(28):e2305236120. doi: 10.1073/pnas.2305236120. Epub 2023 Jul 3. PMID: 37399400.
 
 # Session info {-}
 ```{r sessionInfo, echo=FALSE}
