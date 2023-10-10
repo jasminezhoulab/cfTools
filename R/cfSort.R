@@ -16,7 +16,7 @@
 #' readsBinningFile <- file.path(demo.dir, "cfSort.reads.txt.gz")
 #' id <- "test"
 #'
-#' output <- cfSort(readsBinningFile, id)
+#' cfSort(readsBinningFile, id)
 #' 
 #' @export
 cfSort <- function(readsBinningFile, id="sample") {
@@ -115,8 +115,8 @@ cfSort <- function(readsBinningFile, id="sample") {
   proc <- basiliskStart(my_env)
   
   basiliskRun(proc, function() {
-    system2(command = "python", args = py5.command)
-    system2(command = "python", args = py6.command)
+      system2(command = "python", args = py5.command)
+      system2(command = "python", args = py6.command)
   })
   basiliskStop(proc)
   

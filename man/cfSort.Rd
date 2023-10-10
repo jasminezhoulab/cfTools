@@ -24,6 +24,6 @@ demo.dir <- system.file("data", package="cfTools")
 readsBinningFile <- file.path(demo.dir, "cfSort.reads.txt.gz")
 id <- "test"
 
-output <- cfSort(readsBinningFile, id)
+cfSort(readsBinningFile, id)
 
 }

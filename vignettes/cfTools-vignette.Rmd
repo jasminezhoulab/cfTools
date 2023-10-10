@@ -237,7 +237,9 @@ columns are delimited by TAB for later use.
 markerParam <- GenerateMarkerParam(methLevel, sampleTypes, markerNames)
 print(markerParam)
 ```
-Note that errors may occur because of parameter value `NA:NA` or `0:0`. Remove these values beforehand.
+
+Note that parameter value `NA:NA` or `0:0` may cause errors in the 
+following analyses. Remove these values before using this file.
 
 # Fragments intersecting with marker regions
 
@@ -294,7 +296,9 @@ and background normal fragments and estimates the tumor burden. The main
 inputs are two files: (1) the fragment-level methylation states of reads 
 (column `methState`) that mapped to the cancer-specific markers; 
 (2) paired shape parameters of beta distributions for cancer-specific markers. 
-All columns are delimited by TAB, and the first line is the column names.
+All columns are delimited by TAB, and the first line is the column names. 
+In addition, users can tune the parameter `lambda` to adjust the relative 
+level of tumor burden.
 
 ```{r}
 fragMethFile <- file.path(demo.dir, "CancerDetector.reads.txt.gz")
@@ -307,7 +311,7 @@ The output is the estimated tumor burden $\theta$ and the normal
 cfDNA fraction $1-\theta$.
 
 ```{r}
-CancerDetector(fragMethFile, markerParamFile)
+CancerDetector(fragMethFile, markerParamFile, lambda=0.5, id="test")
 ```
 
 # Tissue deconvolution with `cfDeconvolve()`
@@ -341,6 +345,7 @@ number is 2 (default). All reads with likelihood ratio < cutoff (default:
 is the max(all tissues' likelihoods)/min(all tissues' likelihoods).
 - **EM algorithm maximum iteration number**: a positive integer number. 
 Default is 100.
+- **Sample ID**: the unique sample ID.
 
 For example:
 ```{r}
@@ -348,6 +353,7 @@ numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
 likelihoodRatioThreshold <- 2
 emMaxIterations <- 100
+id <- "test"
 ```
 
 The output is a list containing the cfDNA fractions of different 
@@ -356,7 +362,7 @@ tissue types and an unknown class.
 ```{r, message=TRUE}
 tissueFraction <- cfDeconvolve(fragMethFile2, markerParamFile2, numTissues, 
                                emAlgorithmType, likelihoodRatioThreshold, 
-                               emMaxIterations)
+                               emMaxIterations, id)
 tissueFraction
 ```
 
@@ -382,11 +388,11 @@ CpG sites (methState=0) on the fragment.
 The output is a list containing the cfDNA fractions of 29 tissue types.
 
 ```{r, message=FALSE}
-tissueFraction2 <- cfSort(fragMethInfo, "demo")
+tissueFraction2 <- cfSort(fragMethInfo, id="demo")
 tissueFraction2
 ```
 
-# Citations 
+# Reference
 
 [1] Li W, Li Q, Kang S, Same M, Zhou Y, Sun C, Liu CC, Matsuoka L, Sher L, 
 Wong WH, Alber F, Zhou XJ. CancerDetector: ultrasensitive and non-invasive 
@@ -400,7 +406,12 @@ transcriptomic signature prediction of pregnancies with adverse outcomes.
 *Epigenetics*. 2021 Jun;16(6):642-661. doi: 10.1080/15592294.2020.1816774. 
 PMID: 33045922; PMCID: PMC8143248.
 
-[3] Li S, Zeng W, Ni X, Liu Q, Li W, Stackpole ML, Zhou Y, Gower A, Krysan K, Ahuja P, Lu DS, Raman SS, Hsu W, Aberle DR, Magyar CE, French SW, Han SB, Garon EB, Agopian VG, Wong WH, Dubinett SM, Zhou XJ. Comprehensive tissue deconvolution of cell-free DNA by deep learning for disease diagnosis and monitoring. *Proc Natl Acad Sci U S A*. 2023 Jul 11;120(28):e2305236120. doi: 10.1073/pnas.2305236120. Epub 2023 Jul 3. PMID: 37399400.
+[3] Li S, Zeng W, Ni X, Liu Q, Li W, Stackpole ML, Zhou Y, Gower A, Krysan K, 
+Ahuja P, Lu DS, Raman SS, Hsu W, Aberle DR, Magyar CE, French SW, Han SB, 
+Garon EB, Agopian VG, Wong WH, Dubinett SM, Zhou XJ. Comprehensive tissue 
+deconvolution of cell-free DNA by deep learning for disease diagnosis and 
+monitoring. *Proc Natl Acad Sci U S A*. 2023 Jul 11;120(28):e2305236120. 
+doi: 10.1073/pnas.2305236120. Epub 2023 Jul 3. PMID: 37399400.
 
 # Session info {-}
 ```{r sessionInfo, echo=FALSE}
