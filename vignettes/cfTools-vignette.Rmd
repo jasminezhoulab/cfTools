@@ -107,6 +107,8 @@ unmethylated CpG and 1 represents methylated CpG on the same fragment);
 * **Input 2**: methylation pattern (paired shape parameters of beta 
 distributions) of markers. 
 
+`cfSort()` mainly takes **Input 1** as the only input file.
+
 Section 3.1, 3.2, 3.3 provide an example for generating **Input 1**. 
 We require users to provide pre-processed paired-end bisulfite sequencing 
 reads (i.e., aligned to the reference genome). For each cfDNA sample, 

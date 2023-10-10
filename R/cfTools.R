@@ -34,7 +34,7 @@
 #' Wenyuan Li \email{WenyuanLi@mednet.ucla.edu}
 #' 
 #' @seealso \code{\link{CancerDetector}}, \code{\link{cfDeconvolve}}, 
-#' \code{\link{MergeCpGs}}, \code{\link{MergePEReads}},
+#' \code{\link{cfSort}}, \code{\link{MergeCpGs}}, \code{\link{MergePEReads}},
 #' \code{\link{GenerateFragMeth}}, \code{\link{GenerateMarkerParam}}
 #' 
 #' @docType package

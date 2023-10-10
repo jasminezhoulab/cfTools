@@ -51,7 +51,8 @@ Imports:
     GenomicRanges,
     basilisk,
     R.utils,
-    stats
+    stats,
+    cfToolsData
 StagedInstall: no
 biocViews: 
     Software, 
