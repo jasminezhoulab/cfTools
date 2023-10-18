@@ -1,7 +1,7 @@
 Package: cfTools
 Type: Package
 Title: Informatics Tools for Cell-Free DNA Study
-Version: 1.1.5
+Version: 1.1.6
 Authors@R: c(
     person(given = "Ran",
         family = "Hu",
