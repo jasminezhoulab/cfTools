@@ -15,6 +15,7 @@ using namespace Rcpp;
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
+#include <random>
 #include "matrix.h"
 #include "utils.h"
 
@@ -305,7 +306,7 @@ double objective_em_supervise(Matrix_Double & p, vector<double> & theta)
 //   theta (model parameters), a vector with "T" elements.
 //   q is a matrix of N X T, the tissue-specific posterior probabilty of each read
 //
-void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q)
+void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q, int random_seed)
 {
 	// cout.precision(15);
 	// cerr.precision(15);
@@ -315,9 +316,24 @@ void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matri
 	// initialize model parameters as uniform distribution
 	// alternatively, model parameters can be random numbers by satisfying the crition
 	//    (1) \sum_{i=1}^{ncol}{theta_i}=1
-	for (int j=0; j<ncol; j++) {
-		theta[j] = 1/(double)ncol;
+	if (random_seed == 0) {
+	    for (int j=0; j<ncol; j++) {
+	        theta[j] = 1/(double)ncol;
+	    }
+	} else{
+	    double sum = 0.0;
+	    std::default_random_engine generator(random_seed);
+	    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+	    for (int j = 0; j < ncol; j++) {
+	        theta[j] = distribution(generator);
+	        sum += theta[j];
+	    }
+	    // Normalize the values so that they sum up to 1
+	    for (int j = 0; j < ncol; j++) {
+	        theta[j] /= sum;
+	    }
 	}
+
 	// create and initialize q with the same size of p and with all elements initialized as 0
 	//Matrix_Double q(nrow, ncol, 0);
 	//cerr << "iter 0\t" << objective_em_supervise(p, theta) << endl;
@@ -386,7 +402,7 @@ void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matri
 //
 void em_semisupervise(Matrix_Double & p, vector<int> & Rm, vector<int> & Rl,
 	int max_iter, vector<double> & theta, Matrix_Double& q, vector<double>& q_unknown,
-	vector<double> & m)
+	vector<double> & m, int random_seed)
 {
 	// cout.precision(15);
   // cerr.precision(15);
@@ -408,9 +424,27 @@ void em_semisupervise(Matrix_Double & p, vector<int> & Rm, vector<int> & Rl,
 	// alternatively, theta and m can be random numbers, by satisfying:
 	//    (1) \sum_{i=1}^{ncol+1}{theta_i}=1
 	//    (2) 0 <= m_k <=1 for all k=1,2,...,#marker_covered_by_all_reads
-	for (int j=0; j<ncol+1; j++) {
-		theta[j] = 1/(double)(ncol+1);
+	if (random_seed == 0) {
+	    for (int j=0; j<ncol+1; j++) {
+	        theta[j] = 1/(double)(ncol+1);
+	    }
+	} else{
+	    double sum = 0.0;
+	    std::default_random_engine generator(random_seed);
+	    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+	    for (int j = 0; j < ncol+1; j++) {
+	        theta[j] = distribution(generator);
+	        sum += theta[j];
+	    }
+	    // Normalize the values so that they sum up to 1
+	    for (int j = 0; j < ncol+1; j++) {
+	        theta[j] /= sum;
+	    }
 	}
+	
+	
+	
+	
 	for (int k=0; k<nMarker; k++) {
 		m[k] = 0.5;
 	}

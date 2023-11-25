@@ -108,7 +108,7 @@ void parse_command_line(string reads_binning_file, int num_tissues, double min_l
 
 // [[Rcpp::export]]
 void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, double min_likelihood_ratio_cutoff, std::string tissue_markers_file,
-         std::string em_algorithm_type, std::string output_file, std::string output_type, int em_max_iterations=100) {
+         std::string em_algorithm_type, std::string output_file, std::string output_type, int em_max_iterations=100, int random_seed=0) {
 
 	parse_command_line(reads_binning_file, num_tissues, min_likelihood_ratio_cutoff, tissue_markers_file,
                     em_algorithm_type, output_file, output_type, em_max_iterations);
@@ -187,7 +187,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		// create and initialize q with the same size of p and with all elements initialized as 0
 		Matrix_Double q(num_reads_non_ambiguous, num_tissues, 0);
 		// estimate tissue fractions (theta) and tissue-specific posterior probability matrix (q)
-		em_supervise(reads_likelihoods, em_max_iterations, theta, q);
+		em_supervise(reads_likelihoods, em_max_iterations, theta, q, random_seed);
 
 		// output
 		if (output_type=="tissueFraction") {
@@ -197,6 +197,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 				fout << endl;
 				fout.precision(6);
 				print_vec(fout, theta, "\t");
+				fout << endl; ////////RH
 				// fout << endl << num_reads_ambiguous << endl;
 				// fout << endl << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << endl << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << endl;
 				fout.close();
@@ -241,7 +242,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		// create and initialize q with the same size of p and with all elements initialized as 0
 		Matrix_Double q(num_reads_non_ambiguous, num_tissues, 0);
 		// estimate tissue fractions (theta) and tissue-specific posterior probability matrix (q)
-		em_supervise(reads_likelihoods, em_max_iterations, theta, q);
+		em_supervise(reads_likelihoods, em_max_iterations, theta, q, random_seed);
 		// adjust 'theta' and 'q' by "num_reads_non_ambiguous/(num_reads_ambiguous + num_reads_non_ambiguous)", because we consider 'theta_unknown'
 		double theta_unknown = (double)num_reads_ambiguous/(num_reads_ambiguous + num_reads_non_ambiguous);
 		double tmp = (double)num_reads_non_ambiguous/(num_reads_ambiguous + num_reads_non_ambiguous);

@@ -345,6 +345,7 @@ number is 2 (default). All reads with likelihood ratio < cutoff (default:
 is the max(all tissues' likelihoods)/min(all tissues' likelihoods).
 - **EM algorithm maximum iteration number**: a positive integer number. 
 Default is 100.
+- **Random seed**: a random seed that initialize the EM algorithm. Default is 0.
 - **Sample ID**: the unique sample ID.
 
 For example:
@@ -353,6 +354,7 @@ numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
 likelihoodRatioThreshold <- 2
 emMaxIterations <- 100
+randomSeed <- 0
 id <- "test"
 ```
 
@@ -362,7 +364,7 @@ tissue types and an unknown class.
 ```{r, message=TRUE}
 tissueFraction <- cfDeconvolve(fragMethFile2, markerParamFile2, numTissues, 
                                emAlgorithmType, likelihoodRatioThreshold, 
-                               emMaxIterations, id)
+                               emMaxIterations, randomSeed, id)
 tissueFraction
 ```
 
