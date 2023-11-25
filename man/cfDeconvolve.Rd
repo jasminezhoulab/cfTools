@@ -11,6 +11,7 @@ cfDeconvolve(
   emAlgorithmType = "em.global.unknown",
   likelihoodRatioThreshold = 2,
   emMaxIterations = 100,
+  randomSeed = 0,
   id = "sample"
 )
 }
@@ -32,6 +33,9 @@ em.local.known.}
 \item{emMaxIterations}{a number of EM algorithm maximum iteration. 
 Default is 100.}
 
+\item{randomSeed}{a random seed that initialize the EM algorithm. 
+Default is 0.}
+
 \item{id}{the sample ID.}
 }
 \value{
@@ -50,9 +54,10 @@ numTissues <- 7
 emAlgorithmType <- "em.global.unknown"
 likelihoodRatioThreshold <- 2
 emMaxIterations <- 100
+randomSeed <- 0
 id <- "test"
 
 cfDeconvolve(readsBinningFile, tissueMarkersFile, numTissues, 
-emAlgorithmType, likelihoodRatioThreshold, emMaxIterations, id)
+emAlgorithmType, likelihoodRatioThreshold, emMaxIterations, randomSeed, id)
 
 }

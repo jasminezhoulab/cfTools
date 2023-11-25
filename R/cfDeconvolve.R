@@ -22,6 +22,8 @@ count_meth_unmeth <- function(methString) {
 #' @param likelihoodRatioThreshold a positive float number. Default is 2. 
 #' @param emMaxIterations a number of EM algorithm maximum iteration. 
 #' Default is 100.
+#' @param randomSeed a random seed that initialize the EM algorithm. 
+#' Default is 0.
 #' @param id the sample ID.
 #'
 #' @return a list containing the cfDNA fractions of different 
@@ -36,16 +38,17 @@ count_meth_unmeth <- function(methString) {
 #' emAlgorithmType <- "em.global.unknown"
 #' likelihoodRatioThreshold <- 2
 #' emMaxIterations <- 100
+#' randomSeed <- 0
 #' id <- "test"
 #'
 #' cfDeconvolve(readsBinningFile, tissueMarkersFile, numTissues, 
-#' emAlgorithmType, likelihoodRatioThreshold, emMaxIterations, id)
+#' emAlgorithmType, likelihoodRatioThreshold, emMaxIterations, randomSeed, id)
 #'
 #' @export
 cfDeconvolve <- function(readsBinningFile, tissueMarkersFile, numTissues,
                         emAlgorithmType="em.global.unknown", 
                         likelihoodRatioThreshold=2, 
-                        emMaxIterations=100, id="sample") {
+                        emMaxIterations=100, randomSeed=0, id="sample") {
 
     extdata.dir <- system.file("data", package = "cfTools", mustWork = TRUE)
     output.dir <- extdata.dir
@@ -83,13 +86,13 @@ cfDeconvolve <- function(readsBinningFile, tissueMarkersFile, numTissues,
         read_deconvolution_cpp(readsBinningFile.count, numTissues, 
                                likelihoodRatioThreshold, tissueMarkersFile.unzip,
                                emAlgorithmType, outputFile, "tissueFraction", 
-                               emMaxIterations)
+                               emMaxIterations, randomSeed)
         file.remove(tissueMarkersFile.unzip)
     } else {
         read_deconvolution_cpp(readsBinningFile.count, numTissues, 
                                likelihoodRatioThreshold, tissueMarkersFile,
                                emAlgorithmType, outputFile, "tissueFraction", 
-                               emMaxIterations)
+                               emMaxIterations, randomSeed)
     }
 
     output <- read.csv(outputFile, header=TRUE, sep="\t")

@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // read_deconvolution_cpp
-void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, double min_likelihood_ratio_cutoff, std::string tissue_markers_file, std::string em_algorithm_type, std::string output_file, std::string output_type, int em_max_iterations);
-RcppExport SEXP _cfTools_read_deconvolution_cpp(SEXP reads_binning_fileSEXP, SEXP num_tissuesSEXP, SEXP min_likelihood_ratio_cutoffSEXP, SEXP tissue_markers_fileSEXP, SEXP em_algorithm_typeSEXP, SEXP output_fileSEXP, SEXP output_typeSEXP, SEXP em_max_iterationsSEXP) {
+void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, double min_likelihood_ratio_cutoff, std::string tissue_markers_file, std::string em_algorithm_type, std::string output_file, std::string output_type, int em_max_iterations, int random_seed);
+RcppExport SEXP _cfTools_read_deconvolution_cpp(SEXP reads_binning_fileSEXP, SEXP num_tissuesSEXP, SEXP min_likelihood_ratio_cutoffSEXP, SEXP tissue_markers_fileSEXP, SEXP em_algorithm_typeSEXP, SEXP output_fileSEXP, SEXP output_typeSEXP, SEXP em_max_iterationsSEXP, SEXP random_seedSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type reads_binning_file(reads_binning_fileSEXP);
@@ -23,13 +23,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type output_file(output_fileSEXP);
     Rcpp::traits::input_parameter< std::string >::type output_type(output_typeSEXP);
     Rcpp::traits::input_parameter< int >::type em_max_iterations(em_max_iterationsSEXP);
-    read_deconvolution_cpp(reads_binning_file, num_tissues, min_likelihood_ratio_cutoff, tissue_markers_file, em_algorithm_type, output_file, output_type, em_max_iterations);
+    Rcpp::traits::input_parameter< int >::type random_seed(random_seedSEXP);
+    read_deconvolution_cpp(reads_binning_file, num_tissues, min_likelihood_ratio_cutoff, tissue_markers_file, em_algorithm_type, output_file, output_type, em_max_iterations, random_seed);
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_cfTools_read_deconvolution_cpp", (DL_FUNC) &_cfTools_read_deconvolution_cpp, 8},
+    {"_cfTools_read_deconvolution_cpp", (DL_FUNC) &_cfTools_read_deconvolution_cpp, 9},
     {NULL, NULL, 0}
 };
 

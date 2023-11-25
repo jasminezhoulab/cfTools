@@ -82,10 +82,10 @@ public:
 };
 
 ostream & operator<<(ostream & os, Matrix_Double & mat);
-void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q);
+void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q, int random_seed);
 void em_semisupervise(Matrix_Double & p, vector<int> & Rm, vector<int> & Rl,
 	int max_iter, vector<double> & theta, Matrix_Double& q, vector<double>& q_unknown,
-	vector<double> & m);
+	vector<double> & m, int random_seed);
 void readCounts_by_reads_posterior_probability_version_regular(Matrix_Double & q, double unit, Matrix_Double& readCounts);
 void readCounts_by_reads_posterior_probability_version_unknownclass(Matrix_Double& q, vector<double>& q_unknown, double unit, Matrix_Double& readCounts);
 #endif
