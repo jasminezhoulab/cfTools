@@ -3,23 +3,19 @@
 #' The fragment-level methylation states of reads that mapped 
 #' to the cfSort markers
 #'
-#' @name cfSort.reads
+#' @name cfsort_reads
 #' 
-#' @return A tibble with 99999 rows and 6 variables
+#' @return A tibble with 99999 rows and 2 variables
 #' 
-#' @format A tibble with 99999 rows and 6 variables
+#' @format A tibble with 99999 rows and 2 variables
 #' \describe{
 #' \item{markerName}{Name of the cfSort marker}
-#' \item{cpgPosition}{Postions of CpG sites on the fragment}
 #' \item{methState}{Fragment-level methylation states, 
 #' which are represented by a sequence of binary values 
 #' (0 represents unmethylated CpG and 1 represents methylated 
 #' CpG on the same fragment)}
-#' \item{methCount}{Number of methylated CpG sites on the fragment}
-#' \item{unmethCount}{Number of unmethylated CpG sites on the fragment}
-#' \item{strand}{Strand}
 #' }
-#' @usage data("cfSort.reads")
+#' @usage data("cfsort_reads")
 #' 
 #' @author Ran Hu \email{huran@ucla.edu}
 NULL

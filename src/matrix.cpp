@@ -305,8 +305,9 @@ double objective_em_supervise(Matrix_Double & p, vector<double> & theta)
 // output:
 //   theta (model parameters), a vector with "T" elements.
 //   q is a matrix of N X T, the tissue-specific posterior probabilty of each read
+//   obj is the objective function value
 //
-void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q, int random_seed)
+double em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q, int random_seed)
 {
 	// cout.precision(15);
 	// cerr.precision(15);
@@ -383,6 +384,8 @@ void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matri
 		}
 	}
 	Rcpp::Rcerr << endl;
+	
+	return objective_em_supervise(p, theta);
 }
 
 //

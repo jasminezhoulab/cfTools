@@ -187,7 +187,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		// create and initialize q with the same size of p and with all elements initialized as 0
 		Matrix_Double q(num_reads_non_ambiguous, num_tissues, 0);
 		// estimate tissue fractions (theta) and tissue-specific posterior probability matrix (q)
-		em_supervise(reads_likelihoods, em_max_iterations, theta, q, random_seed);
+		double obj = em_supervise(reads_likelihoods, em_max_iterations, theta, q, random_seed);
 
 		// output
 		if (output_type=="tissueFraction") {
@@ -198,6 +198,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 				fout.precision(6);
 				print_vec(fout, theta, "\t");
 				fout << endl; ////////RH
+				// fout << "obj: " << obj << endl;
 				// fout << endl << num_reads_ambiguous << endl;
 				// fout << endl << "#reads_total: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << endl << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << endl;
 				fout.close();
@@ -242,7 +243,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 		// create and initialize q with the same size of p and with all elements initialized as 0
 		Matrix_Double q(num_reads_non_ambiguous, num_tissues, 0);
 		// estimate tissue fractions (theta) and tissue-specific posterior probability matrix (q)
-		em_supervise(reads_likelihoods, em_max_iterations, theta, q, random_seed);
+		double obj = em_supervise(reads_likelihoods, em_max_iterations, theta, q, random_seed);
 		// adjust 'theta' and 'q' by "num_reads_non_ambiguous/(num_reads_ambiguous + num_reads_non_ambiguous)", because we consider 'theta_unknown'
 		double theta_unknown = (double)num_reads_ambiguous/(num_reads_ambiguous + num_reads_non_ambiguous);
 		double tmp = (double)num_reads_non_ambiguous/(num_reads_ambiguous + num_reads_non_ambiguous);
@@ -259,6 +260,7 @@ void read_deconvolution_cpp(std::string reads_binning_file, int num_tissues, dou
 				fout.precision(6);
 				print_vec(fout, theta, "\t");
 				fout << "\t" << theta_unknown << endl;
+				// fout << "obj: " << obj << endl;
 				// fout << endl;
 				// fout << endl << num_reads_ambiguous << endl;
 				// fout << endl << "#total_reads: " << num_total_reads << "\t#reads_covering_markers(non_ambiguous): " << num_reads_non_ambiguous << endl << "\t#reads_covering_markers(ambiguous): " << num_reads_ambiguous << endl;

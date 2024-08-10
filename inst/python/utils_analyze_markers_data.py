@@ -748,7 +748,8 @@ def summarize_mary_file_binary_meth_values_for_distribution_file(input_methy_rea
         for line in fin:
             if 'NA' in line:
                 continue
-            marker_index, _, meth_string, _, _, _ = line.rstrip().split('\t')
+            marker_index, meth_string = line.rstrip().split('\t')
+            # marker_index, _, meth_string, _, _, _ = line.rstrip().split('\t')
             if marker_index != distribution_of_marker['marker_index']:
                 # A new marker begins, we need to print the old marker
                 if distribution_of_marker['marker_index']!=-1:
