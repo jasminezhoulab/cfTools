@@ -82,7 +82,7 @@ public:
 };
 
 ostream & operator<<(ostream & os, Matrix_Double & mat);
-void em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q, int random_seed);
+double em_supervise(Matrix_Double & p, int max_iter, vector<double> & theta, Matrix_Double& q, int random_seed);
 void em_semisupervise(Matrix_Double & p, vector<int> & Rm, vector<int> & Rl,
 	int max_iter, vector<double> & theta, Matrix_Double& q, vector<double>& q_unknown,
 	vector<double> & m, int random_seed);

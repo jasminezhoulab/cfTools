@@ -21,7 +21,7 @@ Tissue deconvolution in cfDNA using DNN models.
 \examples{
 ## input files
 demo.dir <- system.file("data", package="cfTools")
-readsBinningFile <- file.path(demo.dir, "cfSort.reads.txt.gz")
+readsBinningFile <- file.path(demo.dir, "cfsort_reads.txt.gz")
 id <- "test"
 
 cfSort(readsBinningFile, id)
