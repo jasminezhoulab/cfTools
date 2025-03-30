@@ -73,7 +73,7 @@ MergeCpGs <- function(CpG_OT, CpG_OB, output.dir="", id="") {
     #                                            2, as.character))
     rownames(output_bed) <- NULL
     colnames(output_bed) <- c("chr", "cpgStart", "cpgEnd", "strand", 
-                            "cpgNumber", "cpgPosition", "methState", "name")
+                            "cpgNumber", "cpgPosition", "methState", "qname")
     
     write.table(output_bed, refo_meth, sep="\t", row.names=FALSE, 
                 quote = FALSE)

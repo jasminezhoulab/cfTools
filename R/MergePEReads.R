@@ -60,7 +60,7 @@ MergePEReads <- function(bed_file, output.dir="", id="") {
     output_bed <- as.data.frame(output_bed[order(output_bed$V6),])
     rownames(output_bed) <- NULL
     colnames(output_bed) <- c("chr", "start", "end", "fragmentLength", 
-                                "strand", "name")
+                                "strand", "qname")
     
     write.table(output_bed, refo_frag, sep="\t", row.names=FALSE, 
                 col.names=TRUE, quote=FALSE)

@@ -18,7 +18,11 @@ NULL
 NULL
 #' @importFrom utils read.table
 NULL
-#' @importFrom stats var
+#' @importFrom stats var setNames
 NULL
 #' @importFrom cfToolsData DNN1 DNN2
+NULL
+#' @importFrom graphics layout legend par pie plot.new
+NULL
+#' @importFrom grDevices rainbow
 NULL

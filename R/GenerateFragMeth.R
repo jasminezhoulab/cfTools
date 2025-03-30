@@ -54,14 +54,14 @@ GenerateFragMeth <- function(frag_bed, meth_bed, output.dir="",
     fragment_level.meth <- file.path(output.dir, 
                                     paste0(id, ".fragment_level.meth.bed"))
 
-    merged_file <- merge(x=frag_bed, y=meth_bed, by = "name")
+    merged_file <- merge(x=frag_bed, y=meth_bed, by = "qname")
     output_bed <- as.data.frame(cbind(merged_file$chr.x, merged_file$start, 
-                                merged_file$end, merged_file$name, 
+                                merged_file$end, merged_file$qname, 
                                 merged_file$fragmentLength, 
                                 merged_file$strand.x, merged_file$cpgNumber,
                                 merged_file$cpgPosition, 
                                 merged_file$methState))
-    colnames(output_bed) <- c("chr", "start", "end", "name", "fragmentLength", 
+    colnames(output_bed) <- c("chr", "start", "end", "qname", "fragmentLength", 
                             "strand", "cpgNumber", "cpgPosition", "methState")
     
     output_bed <- output_bed[with(output_bed, 

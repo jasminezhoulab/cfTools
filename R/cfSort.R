@@ -105,8 +105,12 @@ cfSort <- function(readsBinningFile, id="sample") {
   tissue.composition.2 <- file.path(output.dir, 
                                     paste0(id, ".tissue_composition.2.txt"))
   
-  model_DNN1 <- DNN1()
-  model_DNN2 <- DNN2()
+  # model_DNN1 <- DNN1()
+  # model_DNN2 <- DNN2()
+  suppressMessages({
+      model_DNN1 <- DNN1()
+      model_DNN2 <- DNN2()
+  })
   
   py5 <- paste0(python.script.dir, "/model_pred.py")
   py5.command <- c(py5, tfrecords, model_DNN1, tissue.composition.1)
@@ -117,6 +121,8 @@ cfSort <- function(readsBinningFile, id="sample") {
   basiliskRun(proc, function() {
       system2(command = "python", args = py5.command)
       system2(command = "python", args = py6.command)
+      # system2(command = "python", args = py5.command, env = c("PYTHONWARNINGS=ignore", "TF_CPP_MIN_LOG_LEVEL=2"))
+      # system2(command = "python", args = py6.command, env = c("PYTHONWARNINGS=ignore", "TF_CPP_MIN_LOG_LEVEL=2"))
   })
   basiliskStop(proc)
   

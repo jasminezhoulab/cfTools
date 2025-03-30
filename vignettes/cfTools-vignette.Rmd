@@ -34,10 +34,10 @@ abstract: >
   comprehensive landscape of the heterogeneous genetic and epigenetic 
   alterations in tumors. The `r Biocpkg("cfTools")` package provides 
   methods for cfDNA methylation data analysis to facilitate cfDNA-based 
-  cancer studies, including (1) cancer detection: sensitively detect 
   tumor-derived cfDNA to determine whether plasma samples are from cancer 
-  patients or normal individuals; (2) tissue deconvolution: infer the 
   tissue composition of plasma samples.
+  cancer studies, including (1) cancer detection: sensitively detect 
+  patients or normal individuals; (2) tissue deconvolution: infer the 
 vignette: >
   %\VignetteIndexEntry{cfTools-vignette}
   %\VignetteEncoding{UTF-8}
@@ -388,6 +388,18 @@ The output is a list containing the cfDNA fractions of 29 tissue types.
 ```{r, message=FALSE}
 tissueFraction2 <- cfSort(fragMethInfo, id="demo")
 tissueFraction2
+```
+
+# Visualization with `PlotFractionPie()`
+
+Function `PlotFractionPie()` generates a pie chart for a vector of cfDNA 
+fractions. The main input is a numeric vector of class-specific fractions.
+The title, colors, and font size can be adjusted to enhance the look of the 
+figure.
+
+```{r}
+cancer_normal_df <- CancerDetector(fragMethFile, markerParamFile, lambda=0.5, id="test")
+PlotFractionPie(cancer_normal_df, title = "cfDNA Composition", class_colors = c("normal_cfDNA_fraction" = "blue"), font_size = 1.2)
 ```
 
 # Reference

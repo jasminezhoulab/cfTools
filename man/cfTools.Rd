@@ -34,7 +34,8 @@ vignette:
 \seealso{
 \code{\link{CancerDetector}}, \code{\link{cfDeconvolve}}, 
 \code{\link{cfSort}}, \code{\link{MergeCpGs}}, \code{\link{MergePEReads}},
-\code{\link{GenerateFragMeth}}, \code{\link{GenerateMarkerParam}}
+\code{\link{GenerateFragMeth}}, \code{\link{GenerateMarkerParam}}, 
+\code{\link{PlotFractionPie}}
 }
 \author{
 Ran Hu \email{huran@ucla.edu}, 

@@ -10,7 +10,10 @@ import gc
 import tensorflow as tf
 import random
 import collections
-
+import logging
+import warnings
+warnings.filterwarnings("ignore")
+logging.getLogger('tensorflow').setLevel(logging.ERROR)
 
 
 ####################################################################################

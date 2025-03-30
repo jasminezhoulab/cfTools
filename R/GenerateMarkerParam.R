@@ -48,7 +48,13 @@ GenerateMarkerParam <- function(x, sample.types, marker.names,
     typeTrain <- split(x, sample.types) #split based on sample types
     
     typePara <- list()
-    for (type in names(typeTrain)) {
+    all_types <- names(typeTrain)
+    ordered_types <- c(
+        all_types[grepl("tumor", all_types, ignore.case = TRUE)],
+        all_types[!grepl("tumor", all_types, ignore.case = TRUE)]
+    )
+    
+    for (type in ordered_types) {
         typePara[[type]] <- do.call('cbind', lapply(as.list(typeTrain[[type]]), 
                                     paraEstMoM))
     }

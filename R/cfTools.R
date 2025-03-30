@@ -35,7 +35,8 @@
 #' 
 #' @seealso \code{\link{CancerDetector}}, \code{\link{cfDeconvolve}}, 
 #' \code{\link{cfSort}}, \code{\link{MergeCpGs}}, \code{\link{MergePEReads}},
-#' \code{\link{GenerateFragMeth}}, \code{\link{GenerateMarkerParam}}
+#' \code{\link{GenerateFragMeth}}, \code{\link{GenerateMarkerParam}}, 
+#' \code{\link{PlotFractionPie}}
 #' 
 #' @docType package
 #' @name cfTools

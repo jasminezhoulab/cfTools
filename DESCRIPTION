@@ -52,7 +52,9 @@ Imports:
     basilisk,
     R.utils,
     stats,
-    cfToolsData
+    cfToolsData,
+    grDevices,
+    graphics
 StagedInstall: no
 biocViews: 
     Software, 
