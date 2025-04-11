@@ -1,3 +1,19 @@
+
+Changes in version 1.8.0:
+--------------------------
+
+NEW FEATURES
+
+    o Add the `PlotFractionPie()` function, which generates a pie chart for a 
+    vector of cfDNA fractions.
+
+MINOR IMPROVEMENTS
+
+    o Updated output column names for clarity and adjusted file format for 
+    consistency across functions.
+    o Suppressed non-critical TensorFlow warning messages.
+    
+
 Changes in version 1.2.0:
 --------------------------
 

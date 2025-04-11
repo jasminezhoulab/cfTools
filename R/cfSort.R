@@ -119,10 +119,10 @@ cfSort <- function(readsBinningFile, id="sample") {
   proc <- basiliskStart(my_env)
   
   basiliskRun(proc, function() {
-      system2(command = "python", args = py5.command)
-      system2(command = "python", args = py6.command)
-      # system2(command = "python", args = py5.command, env = c("PYTHONWARNINGS=ignore", "TF_CPP_MIN_LOG_LEVEL=2"))
-      # system2(command = "python", args = py6.command, env = c("PYTHONWARNINGS=ignore", "TF_CPP_MIN_LOG_LEVEL=2"))
+      # system2(command = "python", args = py5.command)
+      # system2(command = "python", args = py6.command)
+      system2(command = "python", args = py5.command, env = c("PYTHONWARNINGS=ignore", "TF_CPP_MIN_LOG_LEVEL=2"))
+      system2(command = "python", args = py6.command, env = c("PYTHONWARNINGS=ignore", "TF_CPP_MIN_LOG_LEVEL=2"))
   })
   basiliskStop(proc)
   
