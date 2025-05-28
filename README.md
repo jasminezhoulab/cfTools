@@ -1,18 +1,14 @@
-# Analyzing cell-free DNA methylation data with cfTools
+# cfTools: an R/Bioconductor package for deconvolving cell-free DNA via methylation analysis
 
-cfTools is an R package for cell-free DNA (cfDNA) methylation data analysis, including (1) cancer detection: sensitively detect tumor-derived cfDNA and estimate the tumor-derived cfDNA fraction (tumor burden); (2) tissue deconvolution: infer the tissue type composition and the cfDNA fraction of multiple tissue types for a plasma cfDNA sample.
+We developed the R/Bioconductor package cfTools to deconvolve cfDNA from diseased or normal tissues using DNA methylation profiles. cfTools offers a streamlined workflow for sensitive cancer detection and tissue deconvolution, which can be applied in a broad range of clinical applications involving cfDNA-based diagnosis, prognosis and disease monitoring for cancer and other conditions.
+
+![workflow](./workflow.png)
 
 ## Introduction
 
-Given the methylation sequencing data of a cfDNA sample, for each cancer marker or tissue marker, we deconvolve the tumor-derived or tissue-specific reads from all reads falling in the marker region. Our read-based deconvolution algorithm exploits the pervasiveness of DNA methylation for signal enhancement, therefore can sensitively identify a trace amount of tumor-specific or tissue-specific cfDNA in plasma. 
+cfTools is an R/Bioconductor package that provides a seamless workflow from standard Bismark-processed files to downstream deconvolution functions that decipher cfDNA tissue-of-origin based on methylation profiles. Through the analysis of methylation patterns of tumor or tissue reference markers at the individual DNA fragment level, cfTools calculates the proportions of cfDNA fragments derived from tumor or normal tissues, thereby informing the global tissue composition of plasma cfDNA. 
 
-Specifically, `cfTools` can deconvolve different sources of cfDNA fragments (or reads) in two contexts:
-
-1. Cancer detection: separate cfDNA fragments into tumor-derived fragments and background normal fragments (2 classes), and estimate the tumor-derived cfDNA fraction $\theta$ ($0\leq \theta < 1$).
-
-2. Tissue deconvolution: separate cfDNA fragments from different tissues (> 2 classes), and estimate the cfDNA fraction $\theta_t$ ($0\leq \theta_t < 1$) of different tissue types (including an unknown type) $t$ for a plasma cfDNA sample.
-
-These functions can serve as foundations for more advanced cfDNA-based studies, including cancer diagnosis and disease monitoring.
+To distinguish tumor-derived cfDNA from background fragments and estimate tumor burden, it provides the `CancerDetector` function. To deconvolve multiple tissue types and quantify the tissue composition of cfDNA, it provides two functions. One is `cfDeconvolve`, which is an unsupervised probabilistic approach that can incorporate any user-defined methylation markers and various types of methylation data. The other function is `cfSort`, a supervised deep learning-based pretrained model designed to work with predetermined methylation markers of 29 tissue types and cfDNA methylome sequencing data, such as Whole Genome Bisulfite Sequencing (WGBS) and cfDNA Methylome Sequencing (cfMethyl-Seq) data. While the supervised method offers enhanced accuracy with predefined markers, the unsupervised method provides greater flexibility by accommodating user-specified markers and an unknown tissue type but may not achieve the same level of precision. In addition, to facilitate the use of cfTools, we created the cfToolsData package that offers users access to reference marker files, which encompasses DNA methylation marker information for four cancer types (colon, liver, lung, and stomach cancer) and 29 primary human tissue types. Featuring user-customizable options, cfTools and cfToolsData facilitate the straightforward extraction of biologically meaningful information from standard preprocessed sequencing data, accommodating a wide range of clinical applications such as disease diagnosis, prognosis, and monitoring.
 
 ## Installation
 
@@ -31,9 +27,14 @@ Alternatively, you can install the development version from [GitHub](https://git
 BiocManager::install("jasminezhoulab/cfTools")
 ```
 
-## Vignettes
+## Documentation
 
 See the detailed documentation for `cfTools` using the following commands in your `R` session
 ```
 browseVignettes("cfTools")
 ```
+
+## Citation
+
+If you use `cfTools` in your research, please cite the following paper:
+> Hu, R., Li, S., Stackpole, M. L., Li, Q., Zhou, X. J., & Li, W. (2025). cfTools: an R/Bioconductor package for deconvolving cell-free DNA via methylation analysis. *Bioinformatics Advances*, vbaf108. https://doi.org/10.1093/bioadv/vbaf108
