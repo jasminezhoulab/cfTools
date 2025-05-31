@@ -375,13 +375,20 @@ major human tissues. It is the first supervised tissue deconvolution
 approach with deep learning models. The main input file is similar to function 
 `CancerDetector()` and `cfDeconvolve()`: the fragment-level methylation 
 states of reads (column `methState`) that mapped to the tissue-specific 
-markers. The first column is the marker name of cfSort markers.
+markers. The first column is the marker name of cfSort markers. 
 
 ```{r}
 fragMethInfo <- file.path(demo.dir, "cfsort_reads.txt.gz")
 head(read.csv(fragMethInfo, header=TRUE, sep="\t", 
               colClasses = "character"), 4)
 ```
+
+To obtain the `markerName` column, intersect the output file from 
+`GenerateFragMeth()` (fragment-level information about methylation states) with 
+the cfSort marker file 
+https://github.com/jasminezhoulab/cfSort/blob/main/marker/cfSort_markers.txt.gz 
+using genomic coordinates (hg19). Use the `region_index` column from the marker 
+file as the `markerName`, and retain the `methState` column.
 
 The output is a list containing the cfDNA fractions of 29 tissue types.
 
