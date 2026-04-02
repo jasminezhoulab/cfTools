@@ -70,3 +70,4 @@ LinkingTo:
     BH
 URL: https://github.com/jasminezhoulab/cfTools
 BugReports: https://github.com/jasminezhoulab/cfTools/issues
+Config/Bioconductor/UnsupportedPlatforms: windows-x86
