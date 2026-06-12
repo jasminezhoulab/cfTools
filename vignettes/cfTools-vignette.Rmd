@@ -34,10 +34,10 @@ abstract: >
   comprehensive landscape of the heterogeneous genetic and epigenetic 
   alterations in tumors. The `r Biocpkg("cfTools")` package provides 
   methods for cfDNA methylation data analysis to facilitate cfDNA-based 
+  cancer studies, including (1) cancer detection: sensitively detect
   tumor-derived cfDNA to determine whether plasma samples are from cancer 
+  patients or normal individuals; (2) tissue deconvolution: infer the
   tissue composition of plasma samples.
-  cancer studies, including (1) cancer detection: sensitively detect 
-  patients or normal individuals; (2) tissue deconvolution: infer the 
 vignette: >
   %\VignetteIndexEntry{cfTools-vignette}
   %\VignetteEncoding{UTF-8}
